@@ -1,0 +1,436 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ event.name }} - ELOSTORA{% endblock %}
+
+{% block content %}
+<div class="event-detail-container">
+    <div class="container">
+        <div class="event-detail-grid">
+            <!-- Image Section -->
+            <div class="event-detail-image">
+                {% if event.banner_image %}
+                    <img src="{{ event.banner_image.url }}" alt="{{ event.name }}" class="detail-image">
+                {% else %}
+                    <div class="detail-image-placeholder">
+                        <div class="placeholder-icon">{{ event.get_event_type_display }}</div>
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- Content Section -->
+            <div class="event-detail-content">
+                <div class="detail-header">
+                    <h1 class="detail-title">{{ event.name }}</h1>
+                    <div class="detail-badges">
+                        <span class="badge badge-type">{{ event.get_event_type_display }}</span>
+                        {% if event.is_ongoing %}
+                            <span class="badge badge-live">🔴 LIVE NOW</span>
+                        {% elif event.is_upcoming %}
+                            <span class="badge badge-upcoming">⏰ COMING SOON</span>
+                        {% endif %}
+                    </div>
+                </div>
+
+                {% if event.discount_percentage > 0 %}
+                    <div class="discount-banner">
+                        <div class="discount-value">{{ event.discount_percentage }}%</div>
+                        <div class="discount-text">OFF</div>
+                    </div>
+                {% endif %}
+
+                <div class="detail-info">
+                    <div class="info-item">
+                        <span class="info-label">📅 Start Date:</span>
+                        <span class="info-value">{{ event.event_date|date:"F d, Y - g:i A" }}</span>
+                    </div>
+                    {% if event.end_date %}
+                        <div class="info-item">
+                            <span class="info-label">📅 End Date:</span>
+                            <span class="info-value">{{ event.end_date|date:"F d, Y - g:i A" }}</span>
+                        </div>
+                    {% endif %}
+                    <div class="info-item">
+                        <span class="info-label">⏱️ Status:</span>
+                        <span class="info-value">
+                            {% if event.is_ongoing %}
+                                <span class="status-live">Active Now</span>
+                            {% elif event.is_upcoming %}
+                                <span class="status-upcoming">Upcoming</span>
+                            {% else %}
+                                <span class="status-finished">Finished</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+
+                {% if event.description %}
+                    <div class="detail-description">
+                        <h3>Description</h3>
+                        <p>{{ event.description }}</p>
+                    </div>
+                {% endif %}
+
+                {% if event.categories.exists %}
+                    <div class="categories-section">
+                        <h3>🎯 Categories On Sale</h3>
+                        <div class="categories-grid">
+                            {% for category in event.categories.all %}
+                                <a href="{% url 'shop:category_products' category.slug %}" class="category-card">
+                                    <div class="category-name">{{ category.name }}</div>
+                                    <div class="category-discount-badge">
+                                        <span class="discount-icon">🔥</span>
+                                        <span class="discount-text">{{ event.discount_percentage }}% OFF</span>
+                                    </div>
+                                    <div class="category-action">Browse Products →</div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+
+                <div class="detail-actions">
+                    {% if event.categories.exists %}
+                        <a href="{% url 'shop:category_products' event.categories.first.slug %}" class="btn btn-primary btn-lg">
+                            🛍️ Shop {{ event.categories.first.name }}
+                        </a>
+                    {% else %}
+                        <a href="{% url 'shop:category_list' %}" class="btn btn-primary btn-lg">
+                            🛍️ Shop Now
+                        </a>
+                    {% endif %}
+                    <a href="{% url 'events:event_list' %}" class="btn btn-secondary btn-lg">
+                        ← Back to Events
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .event-detail-container {
+        min-height: 80vh;
+        background: white;
+        padding: 40px 0;
+    }
+
+    .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .event-detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 48px;
+        align-items: start;
+    }
+
+    .event-detail-image {
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+        position: sticky;
+        top: 100px;
+    }
+
+    .detail-image {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .detail-image-placeholder {
+        width: 100%;
+        height: 400px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .placeholder-icon {
+        font-size: 64px;
+        color: white;
+        font-weight: 700;
+    }
+
+    .event-detail-content {
+        padding: 20px 0;
+    }
+
+    .detail-header {
+        margin-bottom: 24px;
+    }
+
+    .detail-title {
+        font-size: clamp(28px, 4vw, 42px);
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0 0 12px;
+        line-height: 1.2;
+    }
+    
+    .categories-section {
+        margin: 32px 0;
+        padding: 24px;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        border-radius: 12px;
+    }
+    
+    .categories-section h3 {
+        margin: 0 0 20px;
+        font-size: 24px;
+        color: #1a1a2e;
+        font-weight: 700;
+    }
+    
+    .categories-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 16px;
+    }
+    
+    .category-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        text-decoration: none;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .category-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.2);
+    }
+    
+    .category-name {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1a1a2e;
+    }
+    
+    .category-discount-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 12px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 8px;
+        color: white;
+        font-weight: 700;
+    }
+    
+    .discount-icon {
+        font-size: 20px;
+    }
+    
+    .discount-text {
+        font-size: 16px;
+    }
+    
+    .category-action {
+        font-size: 14px;
+        color: #667eea;
+        font-weight: 600;
+    }
+
+    .detail-badges {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+    }
+
+    .badge {
+        display: inline-block;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .badge-type {
+        background: #e0e7ff;
+        color: #667eea;
+    }
+
+    .badge-live {
+        background: #dcfce7;
+        color: #10b981;
+    }
+
+    .badge-upcoming {
+        background: #fef3c7;
+        color: #f59e0b;
+    }
+
+    .discount-banner {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+        padding: 24px;
+        border-radius: 12px;
+        text-align: center;
+        margin: 24px 0;
+    }
+
+    .discount-value {
+        font-size: 48px;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .discount-text {
+        font-size: 18px;
+        margin-top: 8px;
+        opacity: 0.95;
+    }
+
+    .detail-info {
+        background: #f9fafb;
+        padding: 24px;
+        border-radius: 12px;
+        margin: 24px 0;
+    }
+
+    .info-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 0;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .info-item:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        font-weight: 600;
+        color: #1a1a2e;
+        font-size: 14px;
+    }
+
+    .info-value {
+        color: #666;
+        font-size: 14px;
+    }
+
+    .status-live {
+        display: inline-block;
+        background: #dcfce7;
+        color: #10b981;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    .status-upcoming {
+        display: inline-block;
+        background: #fef3c7;
+        color: #f59e0b;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    .status-finished {
+        display: inline-block;
+        background: #fee2e2;
+        color: #ef4444;
+        padding: 4px 8px;
+        border-radius: 6px;
+        font-weight: 600;
+        font-size: 13px;
+    }
+
+    .detail-description {
+        margin: 24px 0;
+    }
+
+    .detail-description h3 {
+        font-size: 18px;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0 0 12px;
+    }
+
+    .detail-description p {
+        font-size: 15px;
+        line-height: 1.6;
+        color: #666;
+        margin: 0;
+    }
+
+    .detail-actions {
+        display: flex;
+        gap: 12px;
+        margin-top: 32px;
+    }
+
+    .btn-lg {
+        padding: 14px 24px;
+        font-size: 16px;
+        font-weight: 600;
+    }
+
+    .btn-secondary {
+        background: white;
+        color: #667eea;
+        border: 2px solid #667eea;
+    }
+
+    .btn-secondary:hover {
+        background: #f0f4ff;
+    }
+
+    @media (max-width: 1024px) {
+        .event-detail-grid {
+            gap: 32px;
+        }
+
+        .event-detail-image {
+            position: static;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .event-detail-container {
+            padding: 20px 0;
+        }
+
+        .event-detail-grid {
+            grid-template-columns: 1fr;
+            gap: 24px;
+        }
+
+        .detail-actions {
+            flex-direction: column;
+        }
+
+        .btn-lg {
+            width: 100%;
+            text-align: center;
+        }
+
+        .detail-info {
+            padding: 16px;
+        }
+
+        .info-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+    }
+</style>
+{% endblock %}

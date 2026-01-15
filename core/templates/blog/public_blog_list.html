@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Product News - ELOSTORA{% endblock %}
+
+{% block content %}
+<style>
+    .news-wrap{max-width:1200px;margin:0 auto;padding:10px}
+    .news-hero{background:linear-gradient(135deg,#111827 0%,#2563eb 100%);color:#fff;border-radius:16px;padding:28px;margin-bottom:18px}
+    .news-hero h1{margin:0 0 8px 0;font-size:34px}
+    .news-hero p{margin:0;opacity:.92;line-height:1.5}
+    .news-meta{margin-top:10px;opacity:.85;font-size:13px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px}
+    .card{background:#fff;border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;display:flex;flex-direction:column;min-height:360px;transition:transform .2s, box-shadow .2s}
+    .card:hover{transform:translateY(-3px);box-shadow:0 10px 20px rgba(0,0,0,.08)}
+    .img{height:160px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;font-size:42px}
+    .img img{width:100%;height:160px;object-fit:cover;display:block}
+    .body{padding:14px;display:flex;flex-direction:column;gap:10px;flex:1}
+    .badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;background:#eef2ff;color:#1d4ed8;padding:6px 10px;border-radius:999px;width:fit-content}
+    .tag{display:inline-flex;align-items:center;font-size:12px;background:#f3f4f6;color:#111827;padding:6px 10px;border-radius:999px;width:fit-content}
+    .row{margin:14px 0 18px 0}
+    .rowhead{display:flex;justify-content:space-between;align-items:end;margin-bottom:10px}
+    .rowhead h2{margin:0;font-size:16px;color:#111827}
+    .rowhead small{color:#6b7280}
+    .rowgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px}
+    .title{font-size:16px;font-weight:800;line-height:1.35;color:#111827}
+    .excerpt{font-size:13px;color:#374151;line-height:1.55}
+    .cta{margin-top:auto;display:flex;gap:8px;align-items:center}
+    .btn{display:inline-block;text-decoration:none;padding:10px 12px;border-radius:10px;font-weight:700;font-size:13px}
+    .btn-primary{background:#2563eb;color:#fff}
+    .btn-ghost{background:#f3f4f6;color:#111827}
+    .pager{display:flex;gap:8px;justify-content:center;align-items:center;margin:22px 0}
+    .pager a{padding:8px 12px;border:1px solid #e5e7eb;border-radius:10px;text-decoration:none;color:#111827;background:#fff}
+    .pager span{color:#6b7280;font-size:13px}
+</style>
+
+<div class="news-wrap">
+    <div class="news-hero">
+        <h1>📰 Product News</h1>
+        <p>
+            News-style posts generated from your catalog — each product gets an article.
+            The feed uses a stable daily shuffle so pagination stays consistent.
+        </p>
+        <div class="news-meta">Total products: {{ total_products }} • Daily shuffle seed: {{ seed }}</div>
+    </div>
+
+    {% if items %}
+        <div class="row">
+            <div class="rowhead">
+                <h2>🔥 Trending now</h2>
+                <small>Fast picks from today’s feed</small>
+            </div>
+            <div class="rowgrid">
+                {% for item in items|slice:":6" %}
+                    {% with p=item.product n=item.news %}
+                    <div class="card" style="min-height:320px">
+                        <div class="img">
+                            {% if p.image %}
+                                <img src="{{ p.image }}" alt="{{ p.name }}">
+                            {% else %}
+                                📦
+                            {% endif %}
+                        </div>
+                        <div class="body">
+                            <div style="display:flex;gap:8px;flex-wrap:wrap">
+                                <div class="badge">🔎 {{ p.category_ref.name|default:p.category|default:"Products" }}</div>
+                                {% for t in n.tags %}<div class="tag">{{ t }}</div>{% endfor %}
+                            </div>
+                            <div class="title">{{ n.title }}</div>
+                            <div class="excerpt">{{ n.excerpt }}</div>
+                            <div class="cta">
+                                <a class="btn btn-primary" href="{% url 'blog:public_detail_id' p.id %}">View more</a>
+                                <a class="btn btn-ghost" href="{% url 'shop:product_detail' p.id %}">Open product</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endwith %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="rowhead">
+                <h2>⭐ Editor picks</h2>
+                <small>Curated-style highlights</small>
+            </div>
+            <div class="rowgrid">
+                {% for item in items|slice:"6:12" %}
+                    {% with p=item.product n=item.news %}
+                    <div class="card" style="min-height:320px">
+                        <div class="img">
+                            {% if p.image %}
+                                <img src="{{ p.image }}" alt="{{ p.name }}">
+                            {% else %}
+                                📦
+                            {% endif %}
+                        </div>
+                        <div class="body">
+                            <div style="display:flex;gap:8px;flex-wrap:wrap">
+                                <div class="badge">🧠 Why it matters</div>
+                                <div class="tag">{{ n.why_matters }}</div>
+                            </div>
+                            <div class="title">{{ p.name }}</div>
+                            <div class="excerpt">Best for: <strong>{{ n.best_for }}</strong> • {{ n.reading_time }} min read • {{ n.published_at }}</div>
+                            <div class="cta">
+                                <a class="btn btn-primary" href="{% url 'blog:public_detail_id' p.id %}">View more</a>
+                                <a class="btn btn-ghost" href="{% url 'shop:product_detail' p.id %}">Open product</a>
+                            </div>
+                        </div>
+                    </div>
+                    {% endwith %}
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="grid">
+            {% for item in items %}
+                {% with p=item.product n=item.news %}
+                <div class="card">
+                    <div class="img">
+                        {% if p.image %}
+                            <img src="{{ p.image }}" alt="{{ p.name }}">
+                        {% else %}
+                            📦
+                        {% endif %}
+                    </div>
+                    <div class="body">
+                        <div style="display:flex;gap:8px;flex-wrap:wrap">
+                            <div class="badge">🔎 {{ p.category_ref.name|default:p.category|default:"Products" }}</div>
+                            {% for t in n.tags %}<div class="tag">{{ t }}</div>{% endfor %}
+                        </div>
+                        <div class="title">{{ n.title }}</div>
+                        <div class="excerpt">{{ n.excerpt }}</div>
+                        <div class="excerpt" style="color:#6b7280">{{ n.reading_time }} min read • {{ n.published_at }}</div>
+                        <div class="cta">
+                            <a class="btn btn-primary" href="{% url 'blog:public_detail_id' p.id %}">View more</a>
+                            <a class="btn btn-ghost" href="{% url 'shop:product_detail' p.id %}">Open product</a>
+                        </div>
+                    </div>
+                </div>
+                {% endwith %}
+            {% endfor %}
+        </div>
+
+        <div class="pager">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}&per={{ page_obj.paginator.per_page }}">← Prev</a>
+            {% endif %}
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}&per={{ page_obj.paginator.per_page }}">Next →</a>
+            {% endif %}
+        </div>
+    {% else %}
+        <p>No products available.</p>
+    {% endif %}
+</div>
+{% endblock %}

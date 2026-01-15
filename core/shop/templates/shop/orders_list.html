@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+body{
+    background:linear-gradient(135deg,#020617,#0f172a);
+}
+
+/* ========== WRAPPER ========== */
+.orders-wrapper{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px 10px;
+}
+.orders-card{
+    width:100%;
+    max-width:1100px;
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(18px);
+    border-radius:24px;
+    border:1px solid rgba(255,255,255,0.15);
+    box-shadow:0 30px 80px rgba(0,0,0,.4);
+    padding:28px;
+    animation:fadeInUp .7s ease;
+}
+@keyframes fadeInUp{
+    from{opacity:0;transform:translateY(40px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+/* ========== HEADER ========== */
+.orders-header{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:28px;
+    font-weight:900;
+    color:#ecfeff;
+    margin-bottom:20px;
+}
+
+/* ========== TABLE ========== */
+.orders-table{
+    width:100%;
+    border-collapse:separate;
+    border-spacing:0 12px;
+}
+.orders-table thead th{
+    text-align:left;
+    padding:12px 16px;
+    color:#a7f3d0;
+    font-weight:900;
+    font-size:14px;
+    letter-spacing:.5px;
+}
+.orders-table tbody tr{
+    background:rgba(255,255,255,0.08);
+    border-radius:16px;
+    transition:.3s ease;
+}
+.orders-table tbody tr:hover{
+    background:rgba(34,197,94,0.15);
+    transform:translateX(4px) scale(1.01);
+}
+.orders-table td{
+    padding:16px;
+    color:#f8fafc;
+    font-weight:700;
+}
+.orders-table td:first-child{
+    border-radius:16px 0 0 16px;
+}
+.orders-table td:last-child{
+    border-radius:0 16px 16px 0;
+}
+
+/* ========== BADGES ========== */
+.order-id{
+    font-weight:900;
+    color:#22c55e;
+}
+.order-date{
+    color:#cbd5f5;
+}
+.order-total{
+    font-weight:900;
+    color:#4ade80;
+}
+
+/* ========== BUTTON ========== */
+.view-btn{
+    padding:8px 18px;
+    border-radius:999px;
+    font-weight:900;
+    font-size:14px;
+    text-decoration:none;
+    background:linear-gradient(135deg,#22c55e,#4ade80);
+    color:#022c22;
+    transition:.3s ease;
+    display:inline-block;
+}
+.view-btn:hover{
+    transform:scale(1.08);
+    box-shadow:0 0 20px rgba(34,197,94,.6);
+    color:#022c22;
+}
+
+/* ========== EMPTY STATE ========== */
+.empty-box{
+    text-align:center;
+    padding:60px 20px;
+    color:#e5e7eb;
+}
+.empty-box h3{
+    font-size:26px;
+    font-weight:900;
+    margin-bottom:10px;
+}
+.empty-box p{
+    color:#94a3b8;
+}
+</style>
+
+<div class="orders-wrapper">
+    <div class="orders-card">
+
+        <!-- HEADER -->
+        <div class="orders-header">
+            📦 My Orders
+        </div>
+
+        {% if orders %}
+        <div class="table-responsive">
+            <table class="orders-table">
+                <thead>
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Date</th>
+                        <th>Total Amount</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                    <tr data-order-id="{{ order.id }}">
+                        <td class="order-id">#{{ order.id }}</td>
+                        <td class="order-date">{{ order.created_at|date:"D, d M Y H:i" }}</td>
+                        <td class="order-total">
+                            <span class="order-total-amount">$ {{ order.total_amount|default:"0"|floatformat:2 }}</span>
+                            <span class="order-items" hidden>
+                                {% for item in order.items.all %}
+                                  <span data-q="{{ item.quantity }}" data-p="{{ item.price|default_if_none:item.product.price }}"></span>
+                                {% endfor %}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="{% url 'shop:order_detail' order.id %}" class="view-btn">
+                                👁 View
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <!-- EMPTY -->
+        <div class="empty-box">
+            <h3>😕 No Orders Yet</h3>
+            <p>Looks like you haven't placed any orders. Start shopping now 🔥</p>
+        </div>
+        {% endif %}
+
+    </div>
+</div>
+
+<script>
+(function(){
+  document.querySelectorAll('tr[data-order-id]').forEach(row=>{
+    const totalSpan = row.querySelector('.order-total-amount');
+    const itemsWrap = row.querySelector('.order-items');
+    if (!totalSpan || !itemsWrap) return;
+
+    const serverTotal = parseFloat(String(totalSpan.textContent).replace(/[^0-9.\-]/g,'')) || 0;
+    let sum = 0;
+    itemsWrap.querySelectorAll('span[data-q][data-p]').forEach(s=>{
+      const q = parseFloat(s.getAttribute('data-q')||'0')||0;
+      const p = parseFloat(s.getAttribute('data-p')||'0')||0;
+      
+      // DEBUG: log what we're parsing
+      console.log('Order #' + row.getAttribute('data-order-id'), 'q=', q, 'p=', p, 'line=', q*p);
+      
+      sum += q * p;
+    });
+    
+    console.log('Order #' + row.getAttribute('data-order-id'), 'sum=', sum, 'serverTotal=', serverTotal);
+    
+    if (sum > 0 && serverTotal === 0) {
+      totalSpan.textContent = `$ ${sum.toFixed(2)}`;
+    }
+  });
+})();
+</script>
+
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}{{ action }} Weather{% endblock %}
+
+{% block content %}
+{% include "partials/header.html" %}
+
+<h2 style="margin-top:20px;">{{ action }} Weather Entry</h2>
+<hr>
+
+<form method="POST" style="margin-top:20px; max-width:500px;">
+  {% csrf_token %}
+  
+  {{ form.as_p }}
+  
+  <button type="submit" style="padding:10px 20px; background:#007bff; color:white; border:none; border-radius:5px;">
+    {{ action }}
+  </button>
+</form>
+
+<a href="{% url 'dashboard:weather_list' %}" style="display:inline-block; margin-top:15px;">
+  Back to Weather List
+</a>
+
+{% endblock %}

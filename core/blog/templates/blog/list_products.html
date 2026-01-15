@@ -1,0 +1,23 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% load static %}
+{% block content %}
+<h2 class="font-semibold text-xl mb-4">All Blog Products</h2>
+
+<div class="grid grid-cols-3 gap-4">
+    {% for product in products %}
+    <div class="bg-white rounded-lg p-4 shadow">
+    {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}" class="mb-2">
+        {% else %}
+            <img src="{% static 'photos/default.jpg' %}" alt="{{ product.name }}" class="mb-2">
+        {% endif %}
+
+        <h3 class="font-semibold">{{ product.name }}</h3>
+        <p>{{ product.short_description }}</p>
+        <a href="{% url 'blog:product_detail' product.id %}" class="text-blue-500">Read More</a>
+    </div>
+    {% empty %}
+    <p>No products found.</p>
+    {% endfor %}
+</div>
+{% endblock %}

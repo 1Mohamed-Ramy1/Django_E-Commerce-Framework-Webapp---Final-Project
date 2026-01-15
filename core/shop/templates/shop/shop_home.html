@@ -1,0 +1,310 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- 1. Weather Section (First) -->
+<section style="margin-top:40px; padding: 32px 0; background: linear-gradient(135deg, rgba(102,126,234,0.06) 0%, rgba(118,75,162,0.06) 100%); border-radius: 12px;">
+  <div style="max-width:1400px; margin:0 auto; padding:0 20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h2 style="margin:0; font-size:24px; font-weight:700; color:#1a1a2e;">🌤 Recent Weather Searches</h2>
+      <a href="{% url 'weather:search' %}" style="color:#667eea; text-decoration:none; font-weight:600">Check City →</a>
+    </div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap:16px;">
+      {% if recent_weather_list %}
+        {% for weather in recent_weather_list %}
+        <div style="background:white; border:1px solid #f0f0f0; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.08); padding:16px; display:flex; flex-direction:column; gap:10px;">
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <div style="font-size:12px; color:#667eea; font-weight:700; text-transform:uppercase; letter-spacing:0.5px;">{{ weather.city_name }}</div>
+              <div style="font-size:14px; color:#999;">{{ weather.searched_at|date:"M d, g:i A" }}</div>
+            </div>
+            {% if weather.icon %}
+            <img alt="weather" src="https://openweathermap.org/img/wn/{{ weather.icon }}@2x.png" style="width:48px;height:48px; opacity:0.9;">
+            {% else %}
+            <div style="font-size:32px; opacity:0.5;">🌤</div>
+            {% endif %}
+          </div>
+          {% if weather.temperature %}
+          <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-top:1px solid #f0f0f0;">
+            <span style="font-size:13px; color:#666;">Temperature</span>
+            <span style="font-size:20px; font-weight:700; color:#667eea;">{{ weather.temperature|floatformat:1 }}°C</span>
+          </div>
+          {% endif %}
+          <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:6px;">
+            {% if weather.feels_like %}
+            <div style="background:#f9fafb; border:1px solid #eef2f7; border-radius:8px; padding:8px; text-align:center;">
+              <div style="font-size:10px; color:#667eea; font-weight:700; text-transform:uppercase;">Feels</div>
+              <div style="font-size:14px; font-weight:700; color:#1a1a2e;">{{ weather.feels_like|floatformat:0 }}°</div>
+            </div>
+            {% endif %}
+            {% if weather.wind_speed %}
+            <div style="background:#f9fafb; border:1px solid #eef2f7; border-radius:8px; padding:8px; text-align:center;">
+              <div style="font-size:10px; color:#667eea; font-weight:700; text-transform:uppercase;">Wind</div>
+              <div style="font-size:14px; font-weight:700; color:#1a1a2e;">{{ weather.wind_speed|floatformat:1 }}</div>
+            </div>
+            {% endif %}
+            {% if weather.humidity %}
+            <div style="background:#f9fafb; border:1px solid #eef2f7; border-radius:8px; padding:8px; text-align:center;">
+              <div style="font-size:10px; color:#667eea; font-weight:700; text-transform:uppercase;">Humid</div>
+              <div style="font-size:14px; font-weight:700; color:#1a1a2e;">{{ weather.humidity }}%</div>
+            </div>
+            {% endif %}
+          </div>
+          {% if weather.description %}
+          <div style="font-size:12px; color:#666; text-align:center; padding-top:4px; font-style:italic;">{{ weather.description|title }}</div>
+          {% endif %}
+        </div>
+        {% endfor %}
+      {% else %}
+        <div style="grid-column:1 / -1; text-align:center; color:#999; padding:20px;">No recent weather data. Try searching a city.</div>
+      {% endif %}
+    </div>
+  </div>
+</section>
+
+<!-- 2. Events Section (Second) -->
+<section class="home-events-section" style="margin-top: 40px; padding: 40px 0; background: linear-gradient(135deg, rgba(102,126,234,0.05) 0%, rgba(118,75,162,0.05) 100%); border-radius: 12px;">
+  <div style="max-width: 1400px; margin: 0 auto; padding: 0 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+      <h2 style="margin: 0; font-size: 28px; font-weight: 700; color: #1a1a2e;">🎉 Special Events & Offers</h2>
+      <a href="{% url 'events:event_list' %}" style="color: #667eea; text-decoration: none; font-weight: 600;">View All →</a>
+    </div>
+    <div id="home-events-grid" class="home-events-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; min-height: 300px;">
+      <div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #999;">⏳ Loading events...</div>
+    </div>
+  </div>
+</section>
+
+<!-- 3. Recent Blog Posts (Third) -->
+{% if recent_blogs %}
+<section style="margin-top:40px; padding: 32px 0; background: linear-gradient(135deg, rgba(245,158,11,0.06) 0%, rgba(239,68,68,0.06) 100%); border-radius: 12px;">
+  <div style="max-width:1400px; margin:0 auto; padding:0 20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+      <h2 style="margin:0; font-size:24px; font-weight:700; color:#1a1a2e;">📝 Latest Blog Posts</h2>
+      <a href="{% url 'blog:public_list' %}" style="color:#f59e0b; text-decoration:none; font-weight:600">Read More →</a>
+    </div>
+    <div style="display:grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap:20px;">
+      {% for post in recent_blogs %}
+      <a href="{% url 'blog:public_detail' post.slug %}" style="text-decoration:none;">
+        <div class="blog-card-hover" style="background:white; border:1px solid #f0f0f0; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.08); overflow:hidden; transition: all 0.3s;">
+          {% if post.image %}
+          <div style="width:100%; height:180px; overflow:hidden;">
+            <img src="{{ post.image.url }}" alt="{{ post.title }}" style="width:100%; height:100%; object-fit:cover;">
+          </div>
+          {% else %}
+          <div style="width:100%; height:180px; background:linear-gradient(135deg, #f59e0b 0%, #ef4444 100%); display:flex; align-items:center; justify-content:center; font-size:48px; color:white; opacity:0.9;">📝</div>
+          {% endif %}
+          <div style="padding:16px;">
+            <h3 style="margin:0 0 8px; font-size:16px; font-weight:700; color:#1a1a2e; line-height:1.4;">{{ post.title|truncatewords:10 }}</h3>
+            <p style="margin:0 0 12px; font-size:13px; color:#666; line-height:1.5;">{{ post.content|truncatewords:15|striptags }}</p>
+            <div style="display:flex; justify-content:space-between; align-items:center; font-size:12px; color:#999;">
+              <span>👤 {{ post.author.username }}</span>
+              <span>📅 {{ post.created_at|date:"M d, Y" }}</span>
+            </div>
+          </div>
+        </div>
+      </a>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+<!-- 4. Browse Products Section (Fourth) -->
+<section style="margin-top:40px; padding:40px 0;">
+  <div style="max-width:1400px; margin:0 auto; padding:0 20px;">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+      <h2 style="margin:0; font-size:28px; font-weight:700; color:#1a1a2e;">🛍️ Browse Products</h2>
+      <a href="{% url 'shop:category_list' %}" style="color:#667eea; text-decoration:none; font-weight:600;">View Categories →</a>
+    </div>
+    
+    <div id="home-products-grid" class="products-grid" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:15px; margin-bottom:30px;">
+      {% for product in products %}
+        <a href="{% url 'shop:product_detail' product.pk %}" style="text-decoration:none;color:inherit">
+        <div class="product-card" style="background:white; border:1px solid #f0f0f0; border-radius:12px; padding:12px; box-shadow:0 2px 8px rgba(0,0,0,0.08); transition:all 0.3s;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.12)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)';">
+          <img src="/media/photos/default photo.jpg" alt="{{ product.name }}" style="width:100%;height:200px;object-fit:cover; border-radius:8px;" onerror="this.src='/media/photos/default photo.jpg'">
+          <h4 style="margin:12px 0 6px; font-size:15px; font-weight:700; color:#1a1a2e;">{{ product.name }}</h4>
+          <p style="margin:0;color:#999; font-size:13px;">{{ product.category_ref.name|default:"Uncategorized" }}</p>
+          <p style="margin:8px 0 0;font-weight:700;color:#28a745; font-size:18px;">${{ product.price }}</p>
+        </div>
+        </a>
+      {% endfor %}
+    </div>
+    
+    <!-- Load More Button -->
+    <div id="load-more-container" style="text-align:center; margin-top:30px;">
+      <button id="load-more-btn" onclick="loadMoreProducts()" style="padding:14px 40px; background:linear-gradient(135deg, #667eea 0%, #764ba2 100%); color:white; border:none; border-radius:8px; font-size:16px; font-weight:700; cursor:pointer; transition:all 0.3s; box-shadow:0 4px 12px rgba(102,126,234,0.3);" onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 20px rgba(102,126,234,0.4)';" onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 12px rgba(102,126,234,0.3)';">
+        Load More Products
+      </button>
+    </div>
+    
+    <small style="display:block; margin-top:20px; color:#999; text-align:center; font-style:italic;">Products refresh automatically every 5 minutes</small>
+  </div>
+</section>
+
+<script>
+let isLoadingMore = false;
+
+// Load random products (auto-refresh)
+async function loadRandomProducts() {
+  try {
+    const url = '{% url "shop:random_products_api" %}?count=48';
+    const res = await fetch(url);
+    const data = await res.json();
+    const grid = document.getElementById('home-products-grid');
+    grid.innerHTML = (data.products || []).map(p => {
+      let priceHTML = '';
+      if (p.has_discount) {
+        priceHTML = `
+          <div style="display:flex;flex-direction:column;gap:4px;margin:8px 0 0;">
+            <span style="display:inline-block;background:linear-gradient(135deg,#ff4757 0%,#ff6b7a 100%);color:white;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;text-transform:uppercase;width:fit-content;">🔥 SALE ${p.discount_percentage}%</span>
+            <span style="font-size:14px;color:#94a3b8;text-decoration:line-through;font-weight:500;">$${p.price.toFixed(2)}</span>
+            <span style="font-size:20px;color:#ef4444;font-weight:800;">$${p.discounted_price.toFixed(2)}</span>
+            <span style="font-size:12px;color:#10b981;font-weight:600;">Save $${p.savings.toFixed(2)}</span>
+          </div>`;
+      } else {
+        priceHTML = `<p style="margin:8px 0 0;font-weight:700;color:#28a745;font-size:18px;">$${p.price.toFixed(2)}</p>`;
+      }
+      
+      return `
+        <a href="/shop/product/${p.id}/" style="text-decoration:none;color:inherit">
+          <div class="product-card" style="background:white; border:1px solid #f0f0f0; border-radius:12px; padding:12px; box-shadow:0 2px 8px rgba(0,0,0,0.08); transition:all 0.3s;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.12)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)';">
+            <img src="${p.image || '/media/photos/default photo.jpg'}" alt="${p.name}" style="width:100%;height:200px;object-fit:cover; border-radius:8px;" onerror="this.src='/media/photos/default photo.jpg'">
+            <h4 style="margin:12px 0 6px; font-size:15px; font-weight:700; color:#1a1a2e;">${p.name}</h4>
+            <p style="margin:0;color:#999; font-size:13px;">${p.category || 'Uncategorized'}</p>
+            ${priceHTML}
+          </div>
+        </a>
+      `;
+    }).join('');
+  } catch (e) {
+    console.warn('Failed to load random products', e);
+  }
+}
+
+// Load more products when button clicked
+async function loadMoreProducts() {
+  if (isLoadingMore) return;
+  
+  isLoadingMore = true;
+  const btn = document.getElementById('load-more-btn');
+  const originalText = btn.textContent;
+  btn.textContent = 'Loading...';
+  btn.disabled = true;
+  
+  try {
+    const url = '{% url "shop:random_products_api" %}?count=24';
+    const res = await fetch(url);
+    const data = await res.json();
+    
+    if (data.products && data.products.length > 0) {
+      const grid = document.getElementById('home-products-grid');
+      const newProducts = (data.products || []).map(p => {
+        let priceHTML = '';
+        if (p.has_discount) {
+          priceHTML = `
+            <div style="display:flex;flex-direction:column;gap:4px;margin:8px 0 0;">
+              <span style="display:inline-block;background:linear-gradient(135deg,#ff4757 0%,#ff6b7a 100%);color:white;padding:3px 8px;border-radius:6px;font-size:11px;font-weight:700;text-transform:uppercase;width:fit-content;">🔥 SALE ${p.discount_percentage}%</span>
+              <span style="font-size:14px;color:#94a3b8;text-decoration:line-through;font-weight:500;">$${p.price.toFixed(2)}</span>
+              <span style="font-size:20px;color:#ef4444;font-weight:800;">$${p.discounted_price.toFixed(2)}</span>
+              <span style="font-size:12px;color:#10b981;font-weight:600;">Save $${p.savings.toFixed(2)}</span>
+            </div>`;
+        } else {
+          priceHTML = `<p style="margin:8px 0 0;font-weight:700;color:#28a745;font-size:18px;">$${p.price.toFixed(2)}</p>`;
+        }
+        
+        return `
+          <a href="/shop/product/${p.id}/" style="text-decoration:none;color:inherit">
+            <div class="product-card" style="background:white; border:1px solid #f0f0f0; border-radius:12px; padding:12px; box-shadow:0 2px 8px rgba(0,0,0,0.08); transition:all 0.3s;" onmouseover="this.style.transform='translateY(-4px)'; this.style.boxShadow='0 8px 24px rgba(0,0,0,0.12)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)';">
+              <img src="${p.image || '/media/photos/default photo.jpg'}" alt="${p.name}" style="width:100%;height:200px;object-fit:cover; border-radius:8px;" onerror="this.src='/media/photos/default photo.jpg'">
+              <h4 style="margin:12px 0 6px; font-size:15px; font-weight:700; color:#1a1a2e;">${p.name}</h4>
+              <p style="margin:0;color:#999; font-size:13px;">${p.category || 'Uncategorized'}</p>
+              ${priceHTML}
+            </div>
+          </a>
+        `;
+      }).join('');
+      
+      // Append instead of replace
+      grid.insertAdjacentHTML('beforeend', newProducts);
+      
+      // Smooth scroll to new content
+      setTimeout(() => {
+        const newCards = grid.querySelectorAll('.product-card');
+        if (newCards.length > 0) {
+          const lastCard = newCards[newCards.length - 24];
+          if (lastCard) {
+            lastCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          }
+        }
+      }, 100);
+      
+      btn.textContent = originalText;
+      btn.disabled = false;
+    }
+  } catch (e) {
+    console.error('Failed to load more products', e);
+    btn.textContent = originalText;
+    btn.disabled = false;
+  }
+  
+  isLoadingMore = false;
+}
+
+// Auto-refresh products every 5 minutes
+setInterval(loadRandomProducts, 300000);
+
+// Load events
+async function loadFeaturedEvents() {
+  try {
+    const res = await fetch('{% url "events:api_featured_events" %}?count=4');
+    const data = await res.json();
+    const grid = document.getElementById('home-events-grid');
+    
+    if (!data.events || data.events.length === 0) {
+      grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #999;">No events available right now.</div>';
+      return;
+    }
+    
+    grid.innerHTML = data.events.map(event => `
+      <div style="background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s; border: 1px solid #f0f0f0;" 
+           onmouseover="this.style.transform='translateY(-8px)'; this.style.boxShadow='0 12px 32px rgba(102,126,234,0.15)';"
+           onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)';">
+        <div style="position: relative; width: 100%; height: 180px; overflow: hidden; background: #f5f5f5; display: flex; align-items: center; justify-content: center;">
+          ${event.banner ? `<img src="${event.banner}" alt="${event.name}" style="width: 100%; height: 100%; object-fit: cover;">` : `<div style="font-size: 48px; color: #667eea; opacity: 0.5; font-weight: 700;">${event.event_type}</div>`}
+          ${event.is_cancelled ? '<div style="position: absolute; top: 12px; right: 12px; background: #6b7280; color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase;">CANCELLED</div>' : event.is_ongoing ? '<div style="position: absolute; top: 12px; right: 12px; background: #10b981; color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;">🔴 LIVE</div>' : event.is_upcoming ? '<div style="position: absolute; top: 12px; right: 12px; background: #f59e0b; color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700;">⏰ SOON</div>' : event.is_ended ? '<div style="position: absolute; top: 12px; right: 12px; background: #ef4444; color: white; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; text-transform: uppercase;">END</div>' : ''}
+        </div>
+        <div style="padding: 16px; display: flex; flex-direction: column;">
+          <div style="display: flex; justify-content: space-between; align-items: start; gap: 12px; margin-bottom: 8px;">
+            <h3 style="margin: 0; font-size: 16px; font-weight: 700; color: #1a1a2e; line-height: 1.3;">${event.name}</h3>
+            ${event.discount > 0 ? `<div style="background: #ef4444; color: white; padding: 4px 8px; border-radius: 6px; font-size: 13px; font-weight: 700; white-space: nowrap;">-${event.discount}%</div>` : ''}
+          </div>
+          <p style="margin: 0 0 8px; font-size: 12px; color: #667eea; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">${event.event_type}</p>
+          ${event.description ? `<p style="margin: 0 0 12px; font-size: 13px; color: #666; line-height: 1.4;">${event.description}</p>` : ''}
+          <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px; padding-top: 12px; border-top: 1px solid #f0f0f0; margin-top: auto;">
+            <span style="font-size: 12px; color: #666;">📅 ${new Date(event.event_date).toLocaleDateString()}</span>
+            <a href="/events/detail/${event.uid}/" style="padding: 6px 12px; background: #667eea; color: white; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 600; transition: all 0.2s;" onmouseover="this.style.background='#764ba2';" onmouseout="this.style.background='#667eea';">Details</a>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } catch (e) {
+    console.warn('Failed to load events', e);
+    document.getElementById('home-events-grid').innerHTML = '<div style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #999;">Failed to load events.</div>';
+  }
+}
+
+// Load events on page load
+setTimeout(loadFeaturedEvents, 1000);
+// Refresh events every 60 seconds
+setInterval(loadFeaturedEvents, 60000);
+</script>
+
+<style>
+/* Blog card hover effect */
+.blog-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(245,158,11,0.15) !important;
+}
+</style>
+
+{% endblock %}

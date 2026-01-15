@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Edit Event{% endblock %}
+
+{% block content %}
+<style>
+:root{
+  --primary:#4f46e5;
+  --border:#e5e7eb;
+  --text:#111827;
+  --muted:#6b7280;
+  --bg:#f9fafb;
+}
+
+body{
+  background:var(--bg);
+}
+
+.page-wrapper{
+  max-width:1100px;
+  margin:40px auto;
+  padding:0 20px;
+}
+
+.card{
+  background:#fff;
+  border-radius:16px;
+  padding:35px;
+  box-shadow:0 15px 40px rgba(0,0,0,.08);
+}
+
+.card-header{
+  margin-bottom:30px;
+}
+
+.card-header h1{
+  margin:0;
+  font-size:28px;
+  font-weight:700;
+  color:var(--text);
+}
+
+.card-header p{
+  margin-top:6px;
+  color:var(--muted);
+}
+
+.form-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:22px;
+}
+
+.form-group{
+  display:flex;
+  flex-direction:column;
+}
+
+.form-group.full{
+  grid-column:1 / -1;
+}
+
+label{
+  font-size:14px;
+  font-weight:600;
+  margin-bottom:6px;
+  color:var(--text);
+}
+
+input,select,textarea{
+  padding:12px 14px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  font-size:14px;
+  transition:border .2s, box-shadow .2s;
+}
+
+input:focus,select:focus,textarea:focus{
+  outline:none;
+  border-color:var(--primary);
+  box-shadow:0 0 0 3px rgba(79,70,229,.12);
+}
+
+textarea{
+  resize:vertical;
+  min-height:120px;
+}
+
+.checkbox-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:28px;
+}
+
+.checkbox-row input{
+  width:18px;
+  height:18px;
+}
+
+.image-preview{
+  margin-top:12px;
+}
+
+.image-preview img{
+  max-width:180px;
+  border-radius:12px;
+  border:1px solid var(--border);
+}
+
+.file-box{
+  margin-top:10px;
+  border:2px dashed var(--border);
+  padding:22px;
+  border-radius:12px;
+  text-align:center;
+  cursor:pointer;
+  color:var(--muted);
+}
+
+.file-box input{
+  border:none;
+  padding:0;
+}
+
+.actions{
+  display:flex;
+  gap:14px;
+  margin-top:40px;
+}
+
+.actions button{
+  padding:12px 36px;
+  border:none;
+  border-radius:12px;
+  background:var(--primary);
+  color:#fff;
+  font-weight:600;
+  font-size:15px;
+  cursor:pointer;
+}
+
+.actions a{
+  padding:12px 36px;
+  border-radius:12px;
+  background:#f3f4f6;
+  color:var(--text);
+  text-decoration:none;
+  font-weight:600;
+}
+
+.error-box{
+  background:#fef2f2;
+  color:#b91c1c;
+  border:1px solid #fecaca;
+  padding:16px;
+  border-radius:12px;
+  margin-bottom:25px;
+}
+</style>
+
+<div class="page-wrapper">
+  <div class="card">
+    <div class="card-header">
+      <h1>Edit Event</h1>
+      <p>Define timings, details, and visibility</p>
+    </div>
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      {% if form.errors %}
+      <div class="error-box">
+        {{ form.errors }}
+      </div>
+      {% endif %}
+
+      <div class="form-grid">
+        <div class="form-group full">
+          <label>Name *</label>
+          {{ form.name }}
+        </div>
+
+        <div class="form-group full">
+          <label>Description</label>
+          {{ form.description }}
+        </div>
+
+        <div class="form-group">
+          <label>Start Date *</label>
+          {{ form.event_date }}
+        </div>
+
+        <div class="form-group">
+          <label>End Date</label>
+          {{ form.end_date }}
+        </div>
+
+        <div class="form-group">
+          <label>Event Type</label>
+          {{ form.event_type }}
+        </div>
+
+        <div class="form-group">
+          <label>Discount (%)</label>
+          {{ form.discount_percentage }}
+        </div>
+
+        <div class="form-group">
+          <label>Status</label>
+          {{ form.status }}
+        </div>
+
+        <div class="checkbox-row">
+          {{ form.is_active }}
+          <label>Active</label>
+        </div>
+
+        <div class="form-group full">
+          <label>Banner Image</label>
+
+          {% if form.instance.banner_image %}
+          <div class="image-preview">
+            <img src="{{ form.instance.banner_image.url }}">
+          </div>
+          {% endif %}
+
+          <div class="file-box">
+            {{ form.banner_image }}
+          </div>
+        </div>
+      </div>
+
+      <div class="actions">
+        <button type="submit">Save Changes</button>
+        <a href="{% url 'dashboard:event_list' %}">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

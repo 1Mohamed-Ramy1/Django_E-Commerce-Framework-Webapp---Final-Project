@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}User Form{% endblock %}
+
+{% block content %}
+{% include "partials/header.html" %}
+<div class="admin-shell">
+  <h2 style="margin-top:32px; margin-bottom:20px;">
+      {% if user %}Edit User{% else %}Create User{% endif %}
+  </h2>
+
+  <form method="post" style="max-width:500px;">
+    {% csrf_token %}
+    {# Render form fields but keep password input identifiable for the toggle #}
+    <div>
+        {{ form.username.label_tag }}
+        {{ form.username }}
+    </div>
+    <div>
+        {{ form.email.label_tag }}
+        {{ form.email }}
+    </div>
+    <div>
+        {{ form.first_name.label_tag }}
+        {{ form.first_name }}
+    </div>
+    <div>
+        {{ form.last_name.label_tag }}
+        {{ form.last_name }}
+    </div>
+    <div>
+        {{ form.is_staff.label_tag }}
+        {{ form.is_staff }}
+    </div>
+    <div>
+        {{ form.is_active.label_tag }}
+        {{ form.is_active }}
+    </div>
+    <div style="margin-top:10px;">
+        {{ form.password.label_tag }}
+        <div style="display:flex; gap:10px; align-items:center;">
+            {{ form.password }}
+            <label style="display:flex; align-items:center; gap:6px; font-size:14px; color:#333;">
+                <input id="show-password" type="checkbox" aria-label="Show password"> Show
+            </label>
+        </div>
+        {% if form.password.help_text %}
+          <small style="color:#666; display:block;">{{ form.password.help_text }}</small>
+        {% endif %}
+    </div>
+
+    <button type="submit"
+        style="background:dodgerblue;color:white;padding:10px 15px;border:none;border-radius:5px;cursor:pointer;">
+        {% if user %}Update{% else %}Create{% endif %}
+    </button>
+
+    <a href="{% url 'dashboard:users_list' %}"
+       style="margin-left:10px;color:gray;text-decoration:none;">
+        Cancel
+    </a>
+    </form>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', ()=>{
+    const pw = document.querySelector('input[type="password"][name$="password"]');
+    const cb = document.getElementById('show-password');
+    if(pw && cb){
+        cb.addEventListener('change', ()=> pw.type = cb.checked ? 'text' : 'password');
+    }
+});
+</script>
+{% endblock %}

@@ -1,0 +1,402 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ action }} Event{% endblock %}
+
+{% block extra_css %}
+<style>
+  /* Reset admin styles completely */
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    background: #f5f7fa !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .event-form-page {
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 100px 20px 40px 20px;
+  }
+
+  .event-form-card {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 40px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  }
+
+  .event-form-header {
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #e5e7eb;
+  }
+
+  .event-form-header h1 {
+    margin: 0 0 8px 0;
+    font-size: 26px;
+    font-weight: 700;
+    color: #111827;
+  }
+
+  .event-form-header p {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+  }
+
+  .status-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 12px;
+  }
+
+  .status-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 999px;
+    background: #eef2ff;
+    color: #4f46e5;
+    font-weight: 600;
+    font-size: 11px;
+  }
+
+  .form-field {
+    margin-bottom: 22px;
+  }
+
+  .form-field label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .form-field input[type="text"],
+  .form-field input[type="number"],
+  .form-field input[type="datetime-local"],
+  .form-field select,
+  .form-field textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #111827;
+    background: #ffffff;
+    transition: all 0.15s;
+    font-family: inherit;
+  }
+
+  .form-field input[type="text"]:focus,
+  .form-field input[type="number"]:focus,
+  .form-field input[type="datetime-local"]:focus,
+  .form-field select:focus,
+  .form-field textarea:focus {
+    outline: none;
+    border-color: #4f46e5;
+    box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+  }
+
+  .form-field textarea {
+    resize: vertical;
+    min-height: 110px;
+  }
+
+  .form-field .hint {
+    display: block;
+    margin-top: 4px;
+    font-size: 12px;
+    color: #9ca3af;
+  }
+  
+  /* Category checkboxes styling */
+  .form-field input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #6366f1;
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-bottom: 22px;
+  }
+
+  .checkbox-field {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 28px;
+  }
+
+  .checkbox-field input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    border: 1.5px solid #d1d5db;
+    border-radius: 4px;
+  }
+
+  .checkbox-field label {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+    cursor: pointer;
+  }
+
+  .image-section {
+    margin-bottom: 22px;
+  }
+
+  .image-section label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+  }
+
+  .current-image-box {
+    margin: 12px 0;
+    padding: 16px;
+    background: #f9fafb;
+    border-radius: 8px;
+    border: 1px solid #e5e7eb;
+  }
+
+  .current-image-box p {
+    margin: 0 0 10px 0;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+  }
+
+  .current-image-box img {
+    max-width: 100%;
+    max-height: 200px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+  }
+
+  .file-upload-box {
+    margin-top: 10px;
+    padding: 30px;
+    border: 2px dashed #d1d5db;
+    border-radius: 8px;
+    background: #fafbfc;
+    text-align: center;
+  }
+
+  .file-upload-box input[type="file"] {
+    display: inline-block;
+    padding: 8px 16px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: #ffffff;
+    cursor: pointer;
+    font-size: 13px;
+  }
+
+  .file-upload-box .hint {
+    display: block;
+    margin-top: 8px;
+    font-size: 12px;
+    color: #9ca3af;
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 32px;
+    padding-top: 24px;
+    border-top: 2px solid #e5e7eb;
+  }
+
+  .btn-primary {
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #4f46e5, #6366f1);
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(79, 70, 229, 0.25);
+    transition: all 0.15s;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
+  }
+
+  .btn-secondary {
+    padding: 12px 28px;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    background: #ffffff;
+    color: #374151;
+    font-weight: 600;
+    font-size: 14px;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.15s;
+    display: inline-block;
+  }
+
+  .btn-secondary:hover {
+    background: #f9fafb;
+  }
+
+  .error-alert {
+    padding: 14px;
+    margin-bottom: 20px;
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    color: #b91c1c;
+    font-size: 13px;
+  }
+
+  @media (max-width: 768px) {
+    .form-row {
+      grid-template-columns: 1fr;
+    }
+    
+    .event-form-card {
+      padding: 24px;
+    }
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="event-form-page">
+  <div class="event-form-card">
+    <div class="event-form-header">
+      <h1>{{ action }} Event</h1>
+      <p>Configure event details, timing, status, and banner image</p>
+    </div>
+
+    {% if form.errors %}
+    <div class="error-alert">
+      <strong>Please fix the following errors:</strong><br>
+      {{ form.errors }}
+    </div>
+    {% endif %}
+
+    <form method="post" enctype="multipart/form-data">
+      {% csrf_token %}
+
+      <!-- Name -->
+      <div class="form-field">
+        <label for="id_name">Event Name *</label>
+        {{ form.name }}
+        <span class="hint">E.g., Black Friday Sale, Summer Clearance</span>
+      </div>
+
+      <!-- Description -->
+      <div class="form-field">
+        <label for="id_description">Description</label>
+        {{ form.description }}
+        <span class="hint">Brief description about this event</span>
+      </div>
+
+      <!-- Start Date & End Date -->
+      <div class="form-row">
+        <div class="form-field">
+          <label for="id_event_date">Start Date *</label>
+          {{ form.event_date }}
+        </div>
+        <div class="form-field">
+          <label for="id_end_date">End Date</label>
+          {{ form.end_date }}
+        </div>
+      </div>
+
+      <!-- Event Type & Discount -->
+      <div class="form-row">
+        <div class="form-field">
+          <label for="id_event_type">Event Type</label>
+          {{ form.event_type }}
+        </div>
+        <div class="form-field">
+          <label for="id_discount_percentage">Discount (%)</label>
+          {{ form.discount_percentage }}
+          <span class="hint">Enter value between 0-100</span>
+        </div>
+      </div>
+
+      <!-- Status & Active -->
+      <div class="form-row">
+        <div class="form-field">
+          <label for="id_status">Status</label>
+          {{ form.status }}
+          <span class="hint">Current status of the event</span>
+        </div>
+        <div class="form-field">
+          <label style="margin-bottom: 8px;">Visibility</label>
+          <div class="checkbox-field">
+            {{ form.is_active }}
+            <label for="id_is_active">Active (show on website)</label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Categories (for Discount Application) -->
+      <div class="form-field">
+        <label>Apply Discount to Categories</label>
+        <div style="padding: 16px; background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; margin-top: 8px;">
+          <p style="margin: 0 0 12px; font-size: 13px; color: #6b7280; font-weight: 500;">
+            🎯 Select which product categories this discount will apply to:
+          </p>
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px;">
+            {% for choice in form.categories %}
+            <label style="display: flex; align-items: center; gap: 8px; padding: 8px 12px; background: #ffffff; border: 1px solid #e5e7eb; border-radius: 6px; cursor: pointer; transition: all 0.2s;" onmouseover="this.style.borderColor='#6366f1'; this.style.background='#eff6ff'" onmouseout="this.style.borderColor='#e5e7eb'; this.style.background='#ffffff'">
+              {{ choice.tag }}
+              <span style="font-size: 13px; color: #374151; font-weight: 500;">{{ choice.choice_label }}</span>
+            </label>
+            {% endfor %}
+          </div>
+          <p style="margin: 12px 0 0; font-size: 12px; color: #9ca3af;">
+            💡 All products in selected categories will automatically get the discount percentage specified above.
+          </p>
+        </div>
+      </div>
+
+      <!-- Banner Image -->
+      <div class="image-section">
+        <label>Banner Image</label>
+        
+        {% if form.instance.banner_image %}
+        <div class="current-image-box">
+          <p>Current Banner:</p>
+          <img src="{{ form.instance.banner_image.url }}" alt="Current event banner">
+        </div>
+        {% endif %}
+        
+        <div class="file-upload-box">
+          <input type="file" name="banner_image" id="id_banner_image">
+
+          <span class="hint">Upload PNG or JPG (recommended 1200x400px)</span>
+        </div>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">Save Changes</button>
+        <a href="{% url 'dashboard:event_list' %}" class="btn-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

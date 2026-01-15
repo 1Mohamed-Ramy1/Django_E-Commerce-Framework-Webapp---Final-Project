@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+
+<div class="edit-profile-wrapper">
+    <div class="edit-profile-card">
+        <div class="edit-header">
+            <h1>✏️ Edit Profile</h1>
+            <p>Update your personal information</p>
+        </div>
+
+        <form method="POST" enctype="multipart/form-data" class="modern-form">
+            {% csrf_token %}
+            
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>🆔 Username</label>
+                    {{ user_form.username }}
+                </div>
+
+                <div class="form-group">
+                    <label>👤 First Name</label>
+                    {{ user_form.first_name }}
+                </div>
+
+                <div class="form-group">
+                    <label>👤 Last Name</label>
+                    {{ user_form.last_name }}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>📧 Email</label>
+                {{ user_form.email }}
+            </div>
+
+                        <div class="form-group password-wrapper">
+                                <label>🔒 Password</label>
+                                {{ user_form.password }}
+                                <span class="toggle-password" style="cursor:pointer; margin-left:8px;" onclick="togglePasswordInline(this)">Show</span>
+                                {% if user_form.password.help_text %}
+                                    <small style="display:block; color:#666;">{{ user_form.password.help_text }}</small>
+                                {% endif %}
+                        </div>
+
+            <div class="form-group">
+                <label>📱 Phone</label>
+                {{ profile_form.phone }}
+            </div>
+
+            <div class="form-group">
+                <label>📍 Address</label>
+                {{ profile_form.address }}
+            </div>
+
+            <div class="form-group">
+                <label>🌍 Country</label>
+                {{ profile_form.country }}
+            </div>
+
+            <div class="form-group image-upload">
+                <label>🖼️ Profile Image</label>
+                <div class="file-input-wrapper">
+                    {{ profile_form.image }}
+                    <span class="file-hint">Click to upload a new profile picture</span>
+                </div>
+                {% if request.user.profile.image %}
+                    <img src="{{ request.user.profile.image.url }}" class="preview-img">
+                {% endif %}
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" class="btn-save">💾 Save Changes</button>
+                <a href="{% url 'accounts:profile' %}" class="btn-cancel">❌ Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+    {% block extra_js %}
+    <script>
+    function togglePasswordInline(el){
+        // select by name so toggle works after type changes
+        const pw = document.querySelector('input[name$="password"]');
+        if(!pw) return;
+        if(pw.type === 'password'){
+            pw.type = 'text'; el.innerText = 'Hide';
+        } else {
+            pw.type = 'password'; el.innerText = 'Show';
+        }
+    }
+    </script>
+    {% endblock %}

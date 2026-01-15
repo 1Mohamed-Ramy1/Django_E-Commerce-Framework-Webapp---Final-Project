@@ -1,0 +1,142 @@
+[
+{
+  "model": "gift.gift",
+  "pk": 1,
+  "fields": {
+    "uid": "06eda3a1-f7ca-4f95-8b9e-1d5e0ca6c331",
+    "name": "Apple AirPods Pro (2nd Gen)",
+    "description": "Active Noise Cancellation, Adaptive Audio, and Personalized Spatial Audio with dynamic head tracking.",
+    "points_cost": 12000,
+    "image": "",
+    "stock_quantity": 100,
+    "is_active": true,
+    "created_at": "2026-01-08T02:41:39.181Z"
+  }
+},
+{
+  "model": "gift.gift",
+  "pk": 2,
+  "fields": {
+    "uid": "65028dc8-d148-4231-a3c4-f016e4a9c860",
+    "name": "Samsung Galaxy Watch 6",
+    "description": "Advanced health monitoring, sleep tracking, and fitness features in a premium smartwatch design.",
+    "points_cost": 15000,
+    "image": "",
+    "stock_quantity": 80,
+    "is_active": true,
+    "created_at": "2026-01-08T02:41:39.545Z"
+  }
+},
+{
+  "model": "gift.gift",
+  "pk": 3,
+  "fields": {
+    "uid": "1eb0aeab-06a3-4986-82ce-478550fd3583",
+    "name": "Sony WH-1000XM5 Headphones",
+    "description": "Industry-leading noise cancellation with exceptional sound quality and 30-hour battery life.",
+    "points_cost": 18000,
+    "image": "",
+    "stock_quantity": 90,
+    "is_active": true,
+    "created_at": "2026-01-08T02:41:39.800Z"
+  }
+},
+{
+  "model": "gift.gift",
+  "pk": 4,
+  "fields": {
+    "uid": "19bf98d8-948f-44ab-9929-ce82d3589d75",
+    "name": "iPad Air (5th Generation)",
+    "description": "10.9-inch Liquid Retina display, M1 chip, and support for Apple Pencil and Magic Keyboard.",
+    "points_cost": 25000,
+    "image": "",
+    "stock_quantity": 60,
+    "is_active": true,
+    "created_at": "2026-01-08T02:41:40.000Z"
+  }
+},
+{
+  "model": "gift.gift",
+  "pk": 5,
+  "fields": {
+    "uid": "593fb96c-af23-462e-b32b-43b663c31b99",
+    "name": "Nintendo Switch OLED",
+    "description": "Vibrant 7-inch OLED screen, enhanced audio, and 64GB of internal storage for gaming on the go.",
+    "points_cost": 16000,
+    "image": "",
+    "stock_quantity": 74,
+    "is_active": true,
+    "created_at": "2026-01-08T02:41:40.232Z"
+  }
+},
+{
+  "model": "gift.gift",
+  "pk": 6,
+  "fields": {
+    "uid": "5881ee78-e12f-48ad-87c8-802f9a642568",
+    "name": "DJI Mini 3 Pro Drone",
+    "description": "4K HDR video, 34-minute flight time, and intelligent features for stunning aerial photography.",
+    "points_cost": 30000,
+    "image": "",
+    "stock_quantity": 50,
+    "is_active": true,
+    "created_at": "2026-01-08T02:41:40.343Z"
+  }
+},
+{
+  "model": "gift.gift",
+  "pk": 7,
+  "fields": {
+    "uid": "ac73a6db-3452-442e-9bf7-d1adb2dcf166",
+    "name": "Dyson V15 Detect Cordless Vacuum",
+    "description": "Laser dust detection and powerful suction with up to 60 minutes of run time.",
+    "points_cost": 28000,
+    "image": "",
+    "stock_quantity": 65,
+    "is_active": true,
+    "created_at": "2026-01-08T02:41:40.480Z"
+  }
+},
+{
+  "model": "gift.gift",
+  "pk": 8,
+  "fields": {
+    "uid": "8731ee4c-3b93-4e7f-a8a6-c3ed3d64a334",
+    "name": "PlayStation 5 Console",
+    "description": "Next-gen gaming with ultra-high speed SSD, ray tracing, and immersive 4K gaming experience.",
+    "points_cost": 35000,
+    "image": "",
+    "stock_quantity": 55,
+    "is_active": true,
+    "created_at": "2026-01-08T02:41:40.586Z"
+  }
+},
+{
+  "model": "gift.gift",
+  "pk": 9,
+  "fields": {
+    "uid": "93c72d85-0c1b-419b-9157-ef439db67166",
+    "name": "MacBook Air M2",
+    "description": "13.6-inch Liquid Retina display, powerful M2 chip, and all-day battery life in a sleek design.",
+    "points_cost": 50000,
+    "image": "",
+    "stock_quantity": 3,
+    "is_active": true,
+    "created_at": "2026-01-08T02:41:40.699Z"
+  }
+},
+{
+  "model": "gift.gift",
+  "pk": 10,
+  "fields": {
+    "uid": "ca828cdb-71ca-4ad2-82b6-9e3f48a9341a",
+    "name": "Bose SoundLink Revolve+ II",
+    "description": "Portable Bluetooth speaker with 360-degree sound and up to 17 hours of battery life.",
+    "points_cost": 10000,
+    "image": "",
+    "stock_quantity": 120,
+    "is_active": true,
+    "created_at": "2026-01-08T02:41:40.819Z"
+  }
+}
+]

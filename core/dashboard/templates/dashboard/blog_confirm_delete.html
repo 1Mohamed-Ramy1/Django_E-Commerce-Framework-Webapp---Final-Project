@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Delete Blog Post{% endblock %}
+
+{% block content %}
+{% include "partials/header.html" %}
+
+<h2 style="margin-top:20px; color:red;">Delete Blog Post</h2>
+<hr>
+
+<p>Are you sure you want to delete the post: <strong>{{ post.title }}</strong>?</p>
+
+<form method="POST" style="margin-top:15px;">
+    {% csrf_token %}
+    <button type="submit" style="padding:8px 15px; background:firebrick; color:white; border:none;">
+        Yes, Delete
+    </button>
+    <a href="{% url 'dashboard:blog_list' %}" 
+       style="padding:8px 15px; background:#ccc; color:black; border:none; text-decoration:none;">
+        Cancel
+    </a>
+</form>
+
+{% endblock %}

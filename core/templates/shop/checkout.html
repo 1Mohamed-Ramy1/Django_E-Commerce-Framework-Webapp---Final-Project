@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+.checkout-container {
+        max-width: 1200px;
+        margin: 30px auto;
+        padding: 20px;
+}
+.checkout-form {
+        background: white;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+}
+.order-summary {
+        background: #f8f9fa;
+        padding: 30px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        position: sticky;
+        top: 20px;
+}
+.form-section {
+        margin-bottom: 30px;
+}
+.form-section h3 {
+        color: #333;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #007bff;
+}
+.summary-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #ddd;
+}
+.summary-total {
+        font-size: 20px;
+        font-weight: bold;
+        color: #28a745;
+        padding-top: 15px;
+        margin-top: 15px;
+        border-top: 2px solid #333;
+}
+.btn-place-order {
+        width: 100%;
+        padding: 15px;
+        font-size: 18px;
+        font-weight: bold;
+        background: #28a745;
+        border: none;
+        border-radius: 8px;
+        color: white;
+        cursor: pointer;
+        transition: all 0.3s;
+}
+.btn-place-order:hover {
+        background: #218838;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(40,167,69,0.3);
+}
+.radio-option {
+        padding: 15px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: all 0.3s;
+}
+.radio-option:hover {
+        border-color: #007bff;
+        background: #f0f8ff;
+}
+.radio-option input[type="radio"]:checked + label {
+        color: #007bff;
+        font-weight: bold;
+}
+textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        resize: vertical;
+}
+</style>
+
+<div class="checkout-container">
+        <h2 style="text-align: center; margin-bottom: 30px; color: #333;">🛒 Checkout</h2>
+    
+        <div style="display: grid; grid-template-columns: 1fr 400px; gap: 30px;">
+                <!-- Left Side - Form -->
+                <div>
+                        <form method="post" class="checkout-form">
+                                {% csrf_token %}
+                
+                                <div class="form-section">
+                                        <h3>📍 Delivery Address</h3>
+                                        <textarea name="address" rows="4" placeholder="Enter your full delivery address..." required></textarea>
+                                </div>
+
+                                <div class="form-section">
+                                        <h3>💳 Payment Method</h3>
+                                        <div class="radio-option">
+                                                <input type="radio" name="payment_method" id="cash" value="cash" checked>
+                                                <label for="cash">💵 Cash on Delivery</label>
+                                        </div>
+                                        <div class="radio-option">
+                                                <input type="radio" name="payment_method" id="visa" value="visa">
+                                                <label for="visa">💳 Visa Card</label>
+                                        </div>
+                                </div>
+
+                                <button type="submit" class="btn-place-order">Place Order 🚀</button>
+                        </form>
+                </div>
+
+                <!-- Right Side - Order Summary -->
+                <div>
+                        <div class="order-summary">
+                                <h3 style="margin-bottom: 20px; color: #333;">📦 Order Summary</h3>
+                
+                                {% for item in cart_items %}
+                                <div class="summary-item">
+                                        <span>{{ item.product.name }} ({{ item.size }}) x{{ item.quantity }}</span>
+                                        <span><strong>${{ item.subtotal }}</strong></span>
+                                </div>
+                                {% endfor %}
+
+                                <div class="summary-item" style="margin-top: 15px; padding-top: 15px; border-top: 2px solid #ddd;">
+                                        <span>Subtotal:</span>
+                                        <span>${{ subtotal }}</span>
+                                </div>
+                                <div class="summary-item">
+                                        <span>Delivery Fee (5%):</span>
+                                        <span>${{ delivery_fee }}</span>
+                                </div>
+                                <div class="summary-total">
+                                        <span>Total:</span>
+                                        <span>${{ final_total }}</span>
+                                </div>
+                        </div>
+                </div>
+        </div>
+</div>
+{% endblock %}

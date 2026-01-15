@@ -1,0 +1,534 @@
+{% extends "base.html" %}
+{% block content %}
+
+<style>
+/* ===== WRAPPER ===== */
+.product-page{
+  max-width:1200px;
+  margin:40px auto;
+  padding:0 20px;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+/* ===== BREADCRUMB ===== */
+.breadcrumb{
+  font-size:14px;
+  color:#64748b;
+  margin-bottom:20px;
+}
+.breadcrumb a{
+  color:#2563eb;
+  text-decoration:none;
+  font-weight:600;
+}
+.breadcrumb a:hover{text-decoration:underline;}
+
+/* ===== PRODUCT CARD ===== */
+.product-card{
+  background:#ffffff;
+  border-radius:20px;
+  box-shadow:0 20px 60px rgba(0,0,0,0.08);
+  padding:30px;
+}
+
+/* ===== IMAGE ===== */
+.product-image{
+  width:100%;
+  background:#f8fafc;
+  border-radius:16px;
+  padding:20px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  margin-bottom:30px;
+}
+.product-image img{
+  max-width:100%;
+  max-height:400px;
+  object-fit:contain;
+  border-radius:12px;
+}
+
+/* ===== INFO ===== */
+.product-title{
+  font-size:32px;
+  font-weight:800;
+  margin-bottom:10px;
+}
+.product-category{
+  display:inline-block;
+  background:linear-gradient(135deg,#2563eb,#22c55e);
+  color:#fff;
+  padding:6px 14px;
+  border-radius:999px;
+  font-size:13px;
+  font-weight:600;
+  margin-bottom:15px;
+}
+.product-price{
+  font-size:28px;
+  font-weight:800;
+  color:#16a34a;
+  margin:10px 0 20px;
+}
+.product-price.has-discount{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+.original-price{
+  font-size:20px;
+  color:#94a3b8;
+  text-decoration:line-through;
+  font-weight:500;
+}
+.discounted-price{
+  font-size:32px;
+  color:#ef4444;
+  font-weight:900;
+}
+.sale-badge{
+  display:inline-block;
+  background:linear-gradient(135deg,#ff4757 0%,#ff6b7a 100%);
+  color:white;
+  padding:6px 14px;
+  border-radius:8px;
+  font-size:14px;
+  font-weight:700;
+  text-transform:uppercase;
+  width:fit-content;
+  box-shadow:0 4px 12px rgba(255,71,87,0.3);
+}
+.savings-badge{
+  font-size:16px;
+  color:#10b981;
+  font-weight:700;
+}
+.product-description{
+  color:#475569;
+  line-height:1.7;
+  margin-bottom:30px;
+  font-size:15px;
+}
+
+/* ===== ADD TO CART BOX ===== */
+.add-cart-box{
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  border-radius:16px;
+  padding:20px;
+  margin-bottom:40px;
+}
+
+.form-row{
+  display:flex;
+  gap:15px;
+  margin-bottom:15px;
+  flex-wrap:wrap;
+}
+.form-group{
+  flex:1;
+  min-width:200px;
+}
+.form-group label{
+  display:block;
+  font-size:14px;
+  font-weight:600;
+  margin-bottom:6px;
+}
+.form-group select,
+.form-group input{
+  width:100%;
+  padding:10px 12px;
+  border-radius:10px;
+  border:1px solid #e2e8f0;
+  background:#fff;
+  font-size:14px;
+}
+.form-group select:focus,
+.form-group input:focus{
+  outline:none;
+  border-color:#2563eb;
+  box-shadow:0 0 0 3px rgba(37,99,235,0.15);
+}
+
+.add-btn{
+  width:100%;
+  padding:14px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(135deg,#2563eb,#22c55e);
+  color:#fff;
+  font-weight:800;
+  font-size:16px;
+  cursor:pointer;
+  box-shadow:0 15px 40px rgba(37,99,235,0.35);
+  transition:all .2s ease;
+}
+.add-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 20px 50px rgba(37,99,235,0.45);
+}
+
+/* ===== STOCK BADGE ===== */
+.product-stock{
+  display:inline-block;
+  margin-bottom:15px;
+  background:#ecfeff;
+  color:#0f766e;
+  padding:6px 14px;
+  border-radius:999px;
+  font-size:14px;
+  font-weight:700;
+}
+.product-stock.low{
+  background:#fff7ed;
+  color:#c2410c;
+}
+.product-stock.out{
+  background:#fef2f2;
+  color:#b91c1c;
+}
+
+/* ===== TOAST ===== */
+.toast{
+  position:fixed;
+  top:20px;
+  left:50%;
+  transform:translateX(-50%) translateY(-20px);
+  background:#111827;
+  color:#fff;
+  padding:14px 22px;
+  border-radius:14px;
+  font-weight:700;
+  opacity:0;
+  pointer-events:none;
+  transition:.4s ease;
+  box-shadow:0 20px 50px rgba(0,0,0,.35);
+  z-index:99999;
+}
+.toast.show{
+  opacity:1;
+  transform:translateX(-50%) translateY(0);
+}
+.toast.error{ background:#b91c1c; }
+.toast.success{ background:#16a34a; }
+
+/* ===== SECTIONS ===== */
+.section-title{
+  font-size:24px;
+  font-weight:800;
+  margin:50px 0 20px;
+}
+
+.cards-row{
+  display:flex;
+  gap:20px;
+  overflow-x:auto;
+  padding-bottom:10px;
+}
+
+.card{
+  min-width:260px;
+  background:#ffffff;
+  border-radius:16px;
+  padding:18px;
+  box-shadow:0 10px 30px rgba(0,0,0,0.08);
+  transition:all .2s ease;
+}
+.card:hover{
+  transform:translateY(-5px);
+  box-shadow:0 18px 40px rgba(0,0,0,0.12);
+}
+.card h4{
+  margin:0 0 8px;
+  font-size:18px;
+  font-weight:700;
+}
+.card p{
+  font-size:14px;
+  color:#475569;
+  line-height:1.5;
+}
+.card small{
+  display:block;
+  margin-top:10px;
+  color:#64748b;
+}
+.card a{
+  display:inline-block;
+  margin-top:10px;
+  color:#2563eb;
+  font-weight:700;
+  text-decoration:none;
+}
+.card a:hover{text-decoration:underline;}
+
+/* Developer Backfill Helper */
+.dev-helper{
+  max-width:1200px; margin:20px auto; padding:12px 16px;
+  border:1px dashed #94a3b8; border-radius:12px; background:#f8fafc; color:#0f172a;
+}
+.dev-helper summary{ cursor:pointer; font-weight:800; }
+.dev-helper pre{ background:#0b1020; color:#e5e7eb; padding:12px; border-radius:8px; overflow:auto; }
+.dev-helper .actions{ display:flex; gap:10px; margin-top:10px; }
+.dev-helper .btn{ padding:8px 12px; border-radius:8px; border:none; cursor:pointer; font-weight:800; }
+.dev-helper .copy{ background:#2563eb; color:#fff; }
+</style>
+
+<div class="product-page">
+
+  <!-- BREADCRUMB -->
+  <div class="breadcrumb">
+    <a href="{% url 'shop:shop_home' %}">Home</a> &gt;
+    <span>{{ product.name }}</span>
+  </div>
+
+  <!-- PRODUCT -->
+  <div class="product-card">
+
+    <!-- IMAGE -->
+    <div class="product-image">
+      {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+      {% else %}
+        <img src="https://via.placeholder.com/400x400?text=No+Image" alt="No Image">
+      {% endif %}
+    </div>
+
+    <!-- INFO -->
+    <span class="product-category">{{ product.category }}</span>
+    <div class="product-title">{{ product.name }}</div>
+    
+    {% with discount=product.discount_info %}
+      {% if discount.has_discount %}
+        <div class="product-price has-discount">
+          <div class="sale-badge">🔥 SALE {{ discount.percentage }}% OFF</div>
+          <div class="original-price">${{ discount.original_price|floatformat:2 }}</div>
+          <div class="discounted-price">${{ discount.discounted_price|floatformat:2 }}</div>
+          <div class="savings-badge">💰 You Save ${{ discount.savings|floatformat:2 }}</div>
+        </div>
+      {% else %}
+        <div class="product-price">${{ product.price }}</div>
+      {% endif %}
+    {% endwith %}
+
+    <!-- STOCK BADGE -->
+    <div class="product-stock" id="stock-info">
+      📦 <strong>{{ product.stock }}</strong> items available
+    </div>
+
+    <div class="product-description">{{ product.description|linebreaks }}</div>
+
+    <!-- ADD TO CART -->
+    <div class="add-cart-box">
+      <form id="add-to-cart-form" action="{% url 'shop:add_to_cart' product.pk %}" method="post">
+        {% csrf_token %}
+        <div class="form-row">
+          {% if is_clothing %}
+          <div class="form-group">
+            <label>Size</label>
+            <select name="size" required>
+              <option value="">Select Size</option>
+              {% for size_obj in sizes %}
+                <option value="{{ size_obj.size }}" data-qty="{{ size_obj.quantity }}">{{ size_obj.size }} ({{ size_obj.quantity }} available)</option>
+              {% endfor %}
+            </select>
+          </div>
+          {% endif %}
+          <div class="form-group">
+            <label>Quantity</label>
+            <input type="number" name="quantity" value="1" min="1">
+          </div>
+        </div>
+        <button type="submit" class="add-btn">🛒 Add to Cart</button>
+      </form>
+    </div>
+
+  </div>
+
+  <!-- RELATED EVENTS -->
+  <div class="section-title">Related Events</div>
+  <div class="cards-row">
+    {% for event in events %}
+      <div class="card">
+        <h4>{{ event.title }}</h4>
+        <p>{{ event.description|truncatewords:12 }}</p>
+        <small>{{ event.start_date }} - {{ event.end_date }}</small>
+        <a href="{% url 'events:event_list' %}">View More</a>
+      </div>
+    {% empty %}
+      <p>No related events.</p>
+    {% endfor %}
+  </div>
+
+  <!-- RELATED BLOG -->
+  <div class="section-title">Related Blog</div>
+  <div class="cards-row">
+    {% for post in blog_posts %}
+      <div class="card">
+        <h4>{{ post.title }}</h4>
+        <p>{{ post.content|truncatewords:15 }}</p>
+        <a href="{% url 'blog:product_blog_detail' post.pk %}">Read More</a>
+      </div>
+    {% empty %}
+      <p>No blog posts found.</p>
+    {% endfor %}
+  </div>
+
+<!-- TOAST -->
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function(){
+  const form = document.getElementById("add-to-cart-form");
+  if(!form) return;
+
+  const toast = document.getElementById("toast");
+  const stockInfo = document.getElementById("stock-info");
+  const qtyInput = form.querySelector('input[name="quantity"]');
+  const addBtn = form.querySelector('.add-btn');
+  const sizeSelect = form.querySelector('select[name="size"]');
+
+  const showToast = (msg, status='success') => {
+    toast.textContent = msg;
+    toast.className = "toast show " + status;
+    setTimeout(()=> toast.classList.remove("show"), 3000);
+  };
+
+  const parseAvailableFromBadge = () => {
+    const strong = stockInfo ? stockInfo.querySelector("strong") : null;
+    return strong ? parseInt(strong.textContent || "0", 10) || 0 : 0;
+  };
+
+  const applyStockClasses = (remaining) => {
+    stockInfo.classList.remove("low","out");
+    if (remaining <= 0){
+      stockInfo.classList.add("out");
+      addBtn.disabled = true;
+    } else {
+      addBtn.disabled = false;
+      if (remaining <= 5){ stockInfo.classList.add("low"); }
+    }
+    qtyInput.max = Math.max(remaining, 0);
+    if (parseInt(qtyInput.value || "1",10) > remaining){
+      qtyInput.value = Math.max(remaining, 0);
+    }
+  };
+
+  const setBadge = (remaining) => {
+    stockInfo.innerHTML = `📦 <strong>${remaining}</strong> items available`;
+    applyStockClasses(remaining);
+  };
+
+  // Initialize classes for initial load
+  applyStockClasses(parseAvailableFromBadge());
+
+  // For clothing: update badge when size changes (from data-qty)
+  if (sizeSelect){
+    sizeSelect.addEventListener("change", () => {
+      const opt = sizeSelect.selectedOptions[0];
+      if (!opt || !opt.dataset.qty){
+        return;
+      }
+      const qty = parseInt(opt.dataset.qty || "0", 10) || 0;
+      setBadge(qty);
+    });
+  }
+
+  form.addEventListener("submit", async (e)=>{
+    e.preventDefault();
+
+    // Client-side guards
+    if (sizeSelect && !sizeSelect.value){
+      showToast("❌ Please select a size", "error");
+      return;
+    }
+
+    const currentAvail = parseAvailableFromBadge();
+    const wanted = parseInt(qtyInput.value || "1", 10) || 1;
+    if (wanted > currentAvail){
+      showToast(`❌ Only ${currentAvail} items available`, "error");
+      qtyInput.value = Math.max(currentAvail, 0);
+      return;
+    }
+
+    const formData = new FormData(form);
+
+    try {
+      const res = await fetch("{% url 'shop:add_to_cart' product.pk %}", {
+        method: "POST",
+        headers: {
+          "X-CSRFToken": formData.get("csrfmiddlewaretoken"),
+          "Accept": "application/json",
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        credentials: "same-origin",
+        body: formData
+      });
+
+      const contentType = res.headers.get("content-type") || "";
+      const isJson = contentType.includes("application/json");
+
+      if (!isJson) {
+        // Treat redirect as success unless it is to the login page
+        if (res.redirected) {
+          const url = new URL(res.url, window.location.origin);
+          if (url.pathname.includes("login")) {
+            showToast("❌ Session expired. Please login and try again.", "error");
+            return;
+          }
+          // Success via redirect (e.g., to cart)
+          const wanted = parseInt(qtyInput.value || "1", 10) || 1;
+          const currentAvail = parseAvailableFromBadge();
+          setBadge(Math.max(currentAvail - wanted, 0));
+          showToast("✅ Added to cart successfully 🛒", "success");
+          return;
+        }
+        if (res.status === 403) {
+          showToast("❌ CSRF validation failed. Refresh the page and try again.", "error");
+          return;
+        }
+        showToast(`❌ Server error (${res.status}). Please try again.`, "error");
+        return;
+      }
+
+      const data = await res.json();
+
+      if (!res.ok || data.status === "error") {
+        showToast((data && data.message) || `❌ Server error (${res.status}).`, "error");
+        return;
+      }
+
+      // success
+      showToast(data.message || "✅ Added to cart successfully 🛒", "success");
+      const currentAvail = parseAvailableFromBadge();
+      if (typeof data.remaining === "number") {
+        setBadge(data.remaining);
+      } else {
+        const wanted = parseInt(qtyInput.value || "1", 10) || 1;
+        setBadge(Math.max(currentAvail - wanted, 0));
+      }
+    } catch (err) {
+      // True network failure (offline, CORS, etc.)
+      showToast("❌ Network error. Check connection and try again.", "error");
+    }
+  });
+
+  // Copy backfill script to clipboard
+  const copyBtn = document.getElementById('copy-backfill');
+  const codeEl = document.getElementById('backfill-code');
+  if (copyBtn && codeEl){
+    copyBtn.addEventListener('click', async ()=>{
+      try {
+        await navigator.clipboard.writeText(codeEl.textContent);
+        alert('Backfill script copied. Open Django shell and paste it.');
+      } catch(e){
+        alert('Copy failed. Manually select and copy the script.');
+      }
+    });
+  }
+})();
+</script>
+
+{% endblock %}

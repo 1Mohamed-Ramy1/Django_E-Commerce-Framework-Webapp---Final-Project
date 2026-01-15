@@ -1,0 +1,19 @@
+<h2>Order #{{ order.id }}</h2>
+<p>Status: {{ order.status }}</p>
+<p>Total: {{ order.total_price }}</p>
+
+{% if order.coupon %}
+<p>Coupon: {{ order.coupon.code }}</p>
+<p>Discount: {{ order.discount_amount }}</p>
+<p>Final Total: {{ order.final_total }}</p>
+{% endif %}
+
+<hr>
+
+{% for item in items %}
+        <p>{{ item.product.name }} - {{ item.quantity }} x {{ item.price }}</p>
+{% endfor %}
+
+{% if order.status == 'completed' %}
+        <a href="{% url 'orders:download_invoice' order.id %}">Download Invoice PDF</a>
+{% endif %}

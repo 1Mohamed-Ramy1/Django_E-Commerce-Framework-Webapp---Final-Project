@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "partials/header.html" %}
+
+<h2 style="margin-top:20px; color:red;">Delete Product</h2>
+<hr>
+
+<p>Are you sure you want to delete <strong>{{ product.name }}</strong>?</p>
+
+<form method="POST">
+  {% csrf_token %}
+  <button type="submit" style="padding:10px 20px; background:red; color:white; border:none;">
+    Yes, Delete
+  </button>
+  <a href="{% url 'dashboard:product_list' %}"
+     style="padding:10px 20px; background:#ddd; margin-left:10px; color:black;">
+    Cancel
+  </a>
+</form>
+
+{% endblock %}

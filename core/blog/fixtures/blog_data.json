@@ -1,0 +1,94 @@
+[
+{
+  "model": "blog.category",
+  "pk": 1,
+  "fields": {
+    "name": "Test Category",
+    "description": ""
+  }
+},
+{
+  "model": "blog.category",
+  "pk": 2,
+  "fields": {
+    "name": "Fashion",
+    "description": "Fashion articles and news"
+  }
+},
+{
+  "model": "blog.category",
+  "pk": 3,
+  "fields": {
+    "name": "Tech",
+    "description": "Category for Tech"
+  }
+},
+{
+  "model": "blog.category",
+  "pk": 4,
+  "fields": {
+    "name": "Lifestyle",
+    "description": "Category for Lifestyle"
+  }
+},
+{
+  "model": "blog.category",
+  "pk": 5,
+  "fields": {
+    "name": "News",
+    "description": "Category for News"
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 3,
+  "fields": {
+    "title": "Latest Fashion Trends 2026",
+    "content": "Discover the hottest fashion trends this season. From bold colors to sustainable fashion, learn what's dominating the runways and streets in 2025. Our style experts break down the must-have pieces for every wardrobe.",
+    "image": "posts/Latest_Fashion_Trends_2026.jpg",
+    "slug": "latest-fashion-trends-2025",
+    "is_published": true,
+    "created_at": "2026-01-08T03:58:03.142Z",
+    "updated_at": "2026-01-09T18:01:07.238Z"
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 4,
+  "fields": {
+    "title": "Styling Tips for Every Occasion",
+    "content": "Learn how to style your outfits with confidence for any occasion. Whether you're dressing for work, a casual day out, or a special event, we have the tips and tricks to help you look your best. Discover color combinations, accessory pairings, and more.",
+    "image": "posts/Styling_Tips_men__women.jpg",
+    "slug": "styling-tips-for-every-occasion",
+    "is_published": true,
+    "created_at": "2026-01-08T03:58:03.334Z",
+    "updated_at": "2026-01-09T17:59:48.406Z"
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 5,
+  "fields": {
+    "title": "New Collection Launch Announcement",
+    "content": "We are thrilled to announce our newest collection featuring premium quality pieces designed for the modern lifestyle. Each item has been carefully curated to bring comfort, style, and durability together. Be the first to explore our exclusive designs.",
+    "image": "posts/New_Collection_Launch_Announcement.jpg",
+    "slug": "new-collection-launch-announcement",
+    "is_published": true,
+    "created_at": "2026-01-08T03:58:03.490Z",
+    "updated_at": "2026-01-09T17:58:28.150Z"
+  }
+},
+{
+  "model": "blog.post",
+  "pk": 6,
+  "fields": {
+    "title": "Customer Favorites This Month",
+    "content": "Check out what our customers are loving right now! This month's best-sellers showcase the community's favorite picks. From timeless classics to trendy new arrivals, see what resonates with our diverse customer base and find your next favorite piece.",
+    "image": "posts/Customer_Favorites_This_Month.png",
+    "slug": "customer-favorites-this-month",
+    "is_published": true,
+    "created_at": "2026-01-08T03:58:03.645Z",
+    "updated_at": "2026-01-09T17:57:56.668Z"
+  }
+}
+]

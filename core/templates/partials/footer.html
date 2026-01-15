@@ -1,0 +1,322 @@
+<!-- FOOTER - Premium Multi-column Layout -->
+<footer class="footer">
+    <div class="footer-container">
+        <!-- Company Info Column -->
+        <div class="footer-column">
+            <h3 class="footer-title">About ELOSTORA Store</h3>
+            <p class="footer-text">Premium e-commerce platform delivering quality products with exceptional service.</p>
+            <div class="footer-badges">
+                <span class="trust-badge">✓ Verified Seller</span>
+                <span class="trust-badge">🔒 Secure Checkout</span>
+                <span class="trust-badge">🚚 Fast Shipping</span>
+            </div>
+        </div>
+
+        <!-- Shop Navigation -->
+        <div class="footer-column">
+            <h3 class="footer-title">Shop</h3>
+            <nav class="footer-nav">
+                <a href="{% url 'shop:shop_home' %}" class="footer-link">🛍️ Products</a>
+                <a href="{% url 'gift:gift_list' %}" class="footer-link">🎁 Gifts</a>
+                <a href="{% url 'blog:public_list' %}" class="footer-link">📝 Blog</a>
+                <a href="{% url 'events:event_list' %}" class="footer-link">📅 Events</a>
+                <a href="#" class="footer-link">New Arrivals</a>
+                <a href="#" class="footer-link">Best Sellers</a>
+            </nav>
+        </div>
+
+        <!-- Support & Resources -->
+        <div class="footer-column">
+            <h3 class="footer-title">Support</h3>
+            <nav class="footer-nav">
+                <a href="#" class="footer-link">Contact Us</a>
+                <a href="#" class="footer-link">FAQ</a>
+                <a href="#" class="footer-link">Shipping Info</a>
+                <a href="#" class="footer-link">Returns</a>
+                <a href="#" class="footer-link">Size Guide</a>
+            </nav>
+        </div>
+
+        <!-- Legal & Company -->
+        <div class="footer-column">
+            <h3 class="footer-title">Legal</h3>
+            <nav class="footer-nav">
+                <a href="#" class="footer-link">Privacy Policy</a>
+                <a href="#" class="footer-link">Terms of Service</a>
+                <a href="#" class="footer-link">Cookie Policy</a>
+                <a href="#" class="footer-link">Disclaimer</a>
+            </nav>
+        </div>
+
+        <!-- Newsletter Signup -->
+        <div class="footer-column">
+            <h3 class="footer-title">Newsletter</h3>
+            <p class="footer-text">Subscribe for exclusive deals and updates</p>
+            <form class="newsletter-form" method="POST">
+                {% csrf_token %}
+                <div class="newsletter-input-group">
+                    <input type="email" placeholder="Enter your email" class="newsletter-input" required>
+                    <button type="submit" class="newsletter-btn">→</button>
+                </div>
+            </form>
+            <div class="social-links">
+                <a href="#" class="social-link" aria-label="Facebook">f</a>
+                <a href="#" class="social-link" aria-label="Twitter">𝕏</a>
+                <a href="#" class="social-link" aria-label="Instagram">◉</a>
+                <a href="#" class="https://www.linkedin.com/in/mohamed-ramy-9bb484365/" aria-label="LinkedIn">in</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Bottom -->
+    <div class="footer-bottom">
+        <p>&copy; Eng/ Mohamed Ramy 2026 . All rights reserved.</p>
+        <div class="payment-methods">
+            <span class="payment-method">💳</span>
+            <span class="payment-method">🏦</span>
+            <span class="payment-method">₹</span>
+        </div>
+    </div>
+</footer>
+
+<style>
+/* ──────────────────────────────────────────────────────────────────────── */
+/* 🔗 PREMIUM FOOTER - Multi-column, Trust-focused */
+/* ──────────────────────────────────────────────────────────────────────── */
+
+.footer {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    color: #e0e0e0;
+    padding: 60px 20px 20px;
+    margin-top: 100px;
+    border-top: 1px solid rgba(102, 126, 234, 0.2);
+}
+
+.footer-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-column {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.footer-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+    padding: 0;
+}
+
+.footer-text {
+    font-size: 14px;
+    color: #b0b0b0;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Navigation Links */
+.footer-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.footer-link {
+    font-size: 14px;
+    color: #b0b0b0;
+    text-decoration: none;
+    transition: all 0.15s;
+    position: relative;
+    width: fit-content;
+}
+
+.footer-link::before {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: #667eea;
+    transition: width 0.3s;
+}
+
+.footer-link:hover {
+    color: #667eea;
+}
+
+.footer-link:hover::before {
+    width: 100%;
+}
+
+/* Trust Badges */
+.footer-badges {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.trust-badge {
+    font-size: 12px;
+    color: #667eea;
+    background: rgba(102, 126, 234, 0.1);
+    padding: 8px 12px;
+    border-radius: 6px;
+    border-left: 3px solid #667eea;
+}
+
+/* Newsletter Signup */
+.newsletter-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.newsletter-input-group {
+    display: flex;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    overflow: hidden;
+    transition: all 0.15s;
+}
+
+.newsletter-input-group:focus-within {
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.newsletter-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 12px 16px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+}
+
+.newsletter-input::placeholder {
+    color: #808080;
+}
+
+.newsletter-btn {
+    padding: 0 16px;
+    background: transparent;
+    color: #667eea;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.newsletter-btn:hover {
+    color: #f093fb;
+    transform: translateX(2px);
+}
+
+/* Social Links */
+.social-links {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.social-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(102, 126, 234, 0.2);
+    border-radius: 50%;
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 16px;
+    transition: all 0.3s;
+}
+
+.social-link:hover {
+    background: #667eea;
+    color: white;
+    transform: translateY(-4px);
+}
+
+/* Footer Bottom */
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-top: 24px;
+    border-top: 1px solid rgba(102, 126, 234, 0.2);
+    font-size: 14px;
+    color: #808080;
+}
+
+.footer-bottom p {
+    margin: 0;
+}
+
+.payment-methods {
+    display: flex;
+    gap: 12px;
+}
+
+.payment-method {
+    font-size: 18px;
+    opacity: 0.7;
+    transition: opacity 0.15s;
+}
+
+.payment-method:hover {
+    opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .footer {
+        padding: 40px 16px 16px;
+        margin-top: 60px;
+    }
+    
+    .footer-container {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 24px;
+        margin-bottom: 24px;
+    }
+    
+    .footer-bottom {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .footer-title {
+        font-size: 14px;
+    }
+    
+    .footer-text,
+    .footer-link {
+        font-size: 12px;
+    }
+}
+</style>

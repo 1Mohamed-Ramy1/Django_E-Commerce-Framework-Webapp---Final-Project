@@ -1,0 +1,9 @@
+{% extends "dashboard/base_dashboard.html" %}
+
+{% block content %}
+<h2 class="font-semibold text-xl mb-4">{{ product.name }}</h2>
+
+<img src="{{ product.image.url }}" alt="{{ product.name }}" class="mb-4">
+<p>{{ product.description }}</p>
+<a href="{% url 'blog:blog_list' %}" class="text-blue-500 mt-2 inline-block">Back to Products</a>
+{% endblock %}

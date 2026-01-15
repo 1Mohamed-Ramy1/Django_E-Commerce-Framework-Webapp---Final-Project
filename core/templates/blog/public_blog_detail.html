@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ news.title }} - ELOSTORA{% endblock %}
+
+{% block content %}
+<style>
+	.article{max-width:980px;margin:0 auto;padding:10px}
+	.head{background:linear-gradient(135deg,#0f172a 0%,#16a34a 100%);color:#fff;border-radius:16px;overflow:hidden;border:1px solid rgba(255,255,255,.12)}
+	.head-inner{padding:22px}
+	.kicker{opacity:.9;font-size:13px;margin-bottom:8px}
+	.h1{font-size:30px;font-weight:900;line-height:1.2;margin:0 0 10px 0}
+	.sub{opacity:.92;line-height:1.55;margin:0}
+	.heroimg{height:320px;background:#111827;display:flex;align-items:center;justify-content:center;font-size:56px}
+	.heroimg img{width:100%;height:320px;object-fit:cover;display:block}
+	.content{background:#fff;border:1px solid #e5e7eb;border-radius:16px;padding:18px;margin-top:14px}
+	.grid{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
+	@media (max-width: 900px){ .grid{grid-template-columns:1fr;} }
+	.box{border:1px solid #e5e7eb;border-radius:14px;padding:14px;background:#fff}
+	.box h3{margin:0 0 10px 0;font-size:16px}
+	.p{color:#374151;line-height:1.7;margin:0 0 10px 0}
+	.hl{margin:0;padding-left:18px;color:#374151;line-height:1.7}
+	.pillrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+	.pill{display:inline-flex;align-items:center;font-size:12px;background:#f3f4f6;color:#111827;padding:6px 10px;border-radius:999px}
+	.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+	.btn{display:inline-block;text-decoration:none;padding:10px 12px;border-radius:10px;font-weight:800;font-size:13px}
+	.btn-primary{background:#16a34a;color:#fff}
+	.btn-ghost{background:#f3f4f6;color:#111827}
+</style>
+
+<div class="article">
+	<div class="head">
+		<div class="head-inner">
+			<div class="kicker">📰 Product News • {{ product.category_ref.name|default:product.category|default:"Products" }}</div>
+			<h1 class="h1">{{ news.title }}</h1>
+			<p class="sub">{{ news.subtitle }}</p>
+			<div class="pillrow">
+				{% for t in news.tags %}<span class="pill">{{ t }}</span>{% endfor %}
+				<span class="pill">{{ news.reading_time }} min read</span>
+				<span class="pill">Published: {{ news.published_at }}</span>
+			</div>
+			<div class="btnrow">
+				<a class="btn btn-ghost" href="{% url 'blog:public_list' %}">← Back</a>
+				{% if product.id %}<a class="btn btn-primary" href="{% url 'shop:product_detail' product.id %}">Open product</a>{% endif %}
+			</div>
+		</div>
+		<div class="heroimg">
+			{% if product.image %}
+				<img src="{{ product.image.url }}" alt="{{ product.name }}">
+			{% else %}
+				📦
+			{% endif %}
+		</div>
+	</div>
+
+	<div class="content">
+		<div class="grid">
+			<div class="box">
+				<h3>Story</h3>
+				<p class="p"><strong>Why it matters:</strong> {{ news.why_matters }}</p>
+				{% for para in news.body_paras %}
+					<p class="p">{{ para }}</p>
+				{% endfor %}
+				<p class="p"><strong>{{ news.closing }}</strong></p>
+			</div>
+
+			<div class="box">
+				<h3>Highlights</h3>
+				<ul class="hl">
+					{% for h in news.highlights %}
+						<li>{{ h }}</li>
+					{% endfor %}
+				</ul>
+
+				<hr style="border:none;border-top:1px solid #e5e7eb;margin:12px 0">
+				<h3>Specs snapshot</h3>
+				<ul class="hl">
+					{% for k,v in news.specs %}
+						{% if v %}<li><strong>{{ k }}:</strong> {{ v }}</li>{% endif %}
+					{% endfor %}
+				</ul>
+
+				<hr style="border:none;border-top:1px solid #e5e7eb;margin:12px 0">
+				<h3>Pros</h3>
+				<ul class="hl">
+					{% for pro in news.pros %}
+						<li>{{ pro }}</li>
+					{% endfor %}
+				</ul>
+				<p class="p" style="margin-top:10px"><strong>Best for:</strong> {{ news.best_for }}</p>
+				<hr style="border:none;border-top:1px solid #e5e7eb;margin:12px 0">
+				<h3>Product</h3>
+				<p class="p"><strong>{{ product.name }}</strong></p>
+				{% if product.price %}<p class="p">Price: {{ product.price }}</p>{% endif %}
+				{% if product.description %}<p class="p">{{ product.description|truncatewords:45 }}</p>{% endif %}
+				<div class="btnrow">
+					{% if product.id %}<a class="btn btn-primary" href="{% url 'shop:product_detail' product.id %}">View details</a>{% endif %}
+					<a class="btn btn-ghost" href="{% url 'shop:shop_home' %}">Continue shopping</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+{% endblock %}

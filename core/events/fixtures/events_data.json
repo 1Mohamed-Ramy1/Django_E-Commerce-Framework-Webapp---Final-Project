@@ -1,0 +1,127 @@
+[
+{
+  "model": "events.event",
+  "pk": 1,
+  "fields": {
+    "uid": "548f2987-6f52-475d-9866-f2fd908f1101",
+    "name": "Black Friday Sale",
+    "description": "The biggest sale of the year with up to 70% off on selected items. Limited time offer!",
+    "event_type": "flash",
+    "event_date": "2026-01-01T09:24:00Z",
+    "end_date": "2026-01-07T09:24:00Z",
+    "discount_percentage": 70,
+    "banner_image": "events/Black_Friday_Sale.jpg",
+    "is_active": true,
+    "status": "pending",
+    "created_at": "2026-01-08T01:24:49.027Z",
+    "categories": [
+      14
+    ]
+  }
+},
+{
+  "model": "events.event",
+  "pk": 2,
+  "fields": {
+    "uid": "c1f1407b-7c4a-4ad4-904f-7881c63c38d6",
+    "name": "New Year Mega Offer",
+    "description": "Start your year with amazing discounts on all categories. Free shipping on all orders!",
+    "event_type": "discount",
+    "event_date": "2026-01-01T00:24:00Z",
+    "end_date": "2026-01-31T00:24:00Z",
+    "discount_percentage": 50,
+    "banner_image": "events/Happy_New_Year_Mega_Sale.jpeg",
+    "is_active": true,
+    "status": "live",
+    "created_at": "2026-01-08T01:24:49.261Z",
+    "categories": [
+      1,
+      9,
+      19
+    ]
+  }
+},
+{
+  "model": "events.event",
+  "pk": 3,
+  "fields": {
+    "uid": "34c07739-c1bc-4ae4-8889-f5da0fbf4751",
+    "name": "Summer Collection Launch",
+    "description": "Introducing our exclusive summer collection. Be the first to get the latest trends!",
+    "event_type": "seasonal",
+    "event_date": "2026-08-01T09:24:00Z",
+    "end_date": "2026-11-01T11:24:00Z",
+    "discount_percentage": 25,
+    "banner_image": "events/Summer_Collection_offer.jpg",
+    "is_active": true,
+    "status": "pending",
+    "created_at": "2026-01-08T01:24:49.416Z",
+    "categories": [
+      8,
+      11,
+      12
+    ]
+  }
+},
+{
+  "model": "events.event",
+  "pk": 4,
+  "fields": {
+    "uid": "28794ff0-8768-4051-940d-f89b6986e8c2",
+    "name": "Clearance Sale",
+    "description": "Huge clearance on winter items. Make room for new stock with unbeatable prices!",
+    "event_type": "seasonal",
+    "event_date": "2026-01-01T02:24:00Z",
+    "end_date": "2026-03-31T02:24:00Z",
+    "discount_percentage": 30,
+    "banner_image": "events/Clearance_Sale.webp",
+    "is_active": true,
+    "status": "live",
+    "created_at": "2026-01-08T01:24:49.582Z",
+    "categories": [
+      31,
+      29
+    ]
+  }
+},
+{
+  "model": "events.event",
+  "pk": 5,
+  "fields": {
+    "uid": "6be555a3-0f75-44d3-a689-03e128655f1e",
+    "name": "Member Exclusive Deal",
+    "description": "Special offer for our loyal members only. Extra 25% off when you sign up!",
+    "event_type": "offer",
+    "event_date": "2026-01-10T11:24:00Z",
+    "end_date": "2026-02-14T11:24:00Z",
+    "discount_percentage": 25,
+    "banner_image": "events/Member_Exclusive_Deal.jpg",
+    "is_active": true,
+    "status": "live",
+    "created_at": "2026-01-08T01:24:49.742Z",
+    "categories": [
+      22
+    ]
+  }
+},
+{
+  "model": "events.event",
+  "pk": 6,
+  "fields": {
+    "uid": "8fb445c0-af06-4564-a87b-10b526fcf518",
+    "name": "Valentine Day Special",
+    "description": "Show your love with our exclusive Valentine collection. Perfect gifts for your beloved!",
+    "event_type": "offer",
+    "event_date": "2026-01-15T09:00:00Z",
+    "end_date": "2026-01-15T02:24:00Z",
+    "discount_percentage": 45,
+    "banner_image": "events/valentines-day.jpg",
+    "is_active": true,
+    "status": "soon",
+    "created_at": "2026-01-08T01:24:49.860Z",
+    "categories": [
+      8
+    ]
+  }
+}
+]

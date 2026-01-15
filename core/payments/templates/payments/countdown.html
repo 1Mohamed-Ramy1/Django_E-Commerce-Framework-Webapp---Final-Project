@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .countdown-container{
+        min-height:80vh;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background: linear-gradient(135deg,#6b46c1 0%, #4c1d95 100%);
+        padding:40px 20px;
+    }
+    .countdown-box{
+        background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+        border-radius:18px;
+        padding:48px 36px;
+        width:520px;
+        text-align:center;
+        box-shadow: 0 20px 60px rgba(16,24,40,0.6);
+        color: #fff;
+    }
+    .countdown-title{font-size:28px;font-weight:800;margin-bottom:18px;display:flex;align-items:center;gap:12px;justify-content:center}
+    .countdown-vehicle{font-size:40px}
+    #countdown{font-size:96px;font-weight:900;color:#ffd54f;margin:18px 0;text-shadow:0 6px 18px rgba(0,0,0,0.45)}
+    .countdown-sub{color:rgba(255,255,255,0.85);margin-bottom:14px}
+    .countdown-meta{color:rgba(255,255,255,0.7);font-size:14px}
+</style>
+
+<div class="countdown-container">
+    <div class="countdown-box">
+        <div class="countdown-title">
+            <span class="countdown-vehicle">🚚</span>
+            <div>
+                <div style="font-size:18px;font-weight:800">Delivery Vans</div>
+                <div style="font-size:13px;color:rgba(255,255,255,0.8)">Processing Your Order</div>
+            </div>
+        </div>
+
+        <div id="countdown">5</div>
+        <p class="countdown-sub">Delivering your amazing order ...</p>
+        <div style="height:8px;width:100%;background:rgba(255,255,255,0.06);border-radius:999px;overflow:hidden;margin:18px 0;">
+            <div id="progress" style="height:100%;width:0%;background:linear-gradient(90deg,#34d399,#60a5fa);transition:width 0.25s ease;"></div>
+        </div>
+        <div class="countdown-meta">Order #{{ order.id }} — Total: ${{ order.final_total }}</div>
+    </div>
+</div>
+
+<script>
+    (function(){
+        // 5-second countdown with animated progress bar
+        let countdown = 5;
+        const countdownElement = document.getElementById('countdown');
+        const progressEl = document.getElementById('progress');
+        const total = countdown;
+
+        function updateDisplay(val){
+            if(countdownElement) countdownElement.textContent = val;
+        }
+
+        function tick(){
+            if (countdown <= 0) return;
+            countdown -= 1;
+            updateDisplay(countdown);
+            const elapsed = (total - countdown);
+            const pct = Math.min(100, Math.round((elapsed / total) * 100));
+            if(progressEl) progressEl.style.width = pct + '%';
+
+            if(countdown <= 0){
+                clearInterval(timer);
+                if(countdownElement) countdownElement.textContent = '✓';
+                // disable protection briefly and then replace
+                try { window.removeEventListener && window.removeEventListener('beforeunload', beforeUnloadHandler); } catch(e){}
+                setTimeout(function(){
+                    window.location.replace("{% url 'payments:confirm_payment' order.id %}");
+                }, 500);
+            }
+        }
+
+        // Start timer
+        const timer = setInterval(tick, 1000);
+
+        // beforeunload handler defined so we can remove it later
+        function beforeUnloadHandler(e){
+            if (typeof countdown !== 'undefined' && countdown > 0){
+                e.preventDefault();
+                e.returnValue = '';
+                return '';
+            }
+        }
+
+        // Stronger prevention of back navigation while countdown is active
+        try {
+            if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+            // Push two states to create a trap in the history stack
+            history.pushState(null, null, location.href);
+            history.pushState(null, null, location.href);
+
+            window.addEventListener('popstate', function (e) {
+                if (typeof countdown !== 'undefined' && countdown > 0) {
+                    // Re-push to keep user on this page while countdown runs
+                    history.pushState(null, null, location.href);
+                    try { console.warn('Please wait until the payment processing completes.'); } catch(_){}
+                }
+            });
+
+            // Warn if user attempts to close/leave the page during countdown
+            window.addEventListener('beforeunload', beforeUnloadHandler);
+        } catch (err) {
+            // ignore history errors on older browsers
+        }
+    })();
+</script>
+{% endblock %}

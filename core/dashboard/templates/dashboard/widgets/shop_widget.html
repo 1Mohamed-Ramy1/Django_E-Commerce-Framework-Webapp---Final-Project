@@ -1,0 +1,21 @@
+<div class="bg-white rounded-xl shadow p-5 border border-gray-200">
+    <div class="flex justify-between items-center mb-3">
+        <h3 class="text-lg font-semibold">🛒 Shop Products</h3>
+        <i class="fa-solid fa-box-open text-gray-500"></i>
+    </div>
+
+    <p class="text-3xl font-bold text-yellow-600">{{ shop_products|length }}</p>
+    <p class="text-sm text-gray-500">Latest Products</p>
+
+    <ul class="mt-2 text-sm text-gray-700 list-disc list-inside">
+        {% for product in shop_products %}
+        <li>{{ product.name }} — ${{ product.price }}</li>
+        {% empty %}
+        <li>No products found</li>
+        {% endfor %}
+    </ul>
+
+    <a href="{% url 'shop:view_cart' %}" class="mt-4 inline-block px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
+        Go to Cart
+    </a>
+</div>

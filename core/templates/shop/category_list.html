@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}All Categories - ELOSTORA{% endblock %}
+
+{% block content %}
+<style>
+.categories-container{max-width:1200px;margin:0 auto;padding:40px 20px}
+.page-title{font-size:42px;font-weight:bold;text-align:center;margin-bottom:10px;color:#333}
+.page-subtitle{text-align:center;color:#666;margin-bottom:40px;font-size:18px}
+.categories-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:25px}
+.category-card{background:white;border:2px solid #e0e0e0;border-radius:12px;padding:30px;text-align:center;transition:all 0.3s;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.05);position:relative;overflow:hidden}
+.category-card:hover{border-color:#007bff;transform:translateY(-5px);box-shadow:0 8px 20px rgba(0,123,255,0.15)}
+.category-card.has-discount{border-color:#ff4757;background:linear-gradient(135deg,#fff 0%,#ffe5e8 100%)}
+.category-card.has-discount:hover{border-color:#ff3838;box-shadow:0 8px 20px rgba(255,71,87,0.25)}
+.category-icon{font-size:48px;margin-bottom:15px}
+.category-name{font-size:20px;font-weight:600;color:#333;margin-bottom:10px}
+.category-count{color:#666;font-size:14px}
+.category-link{text-decoration:none;color:inherit;display:block}
+.discount-badge{position:absolute;top:15px;right:15px;background:linear-gradient(135deg,#ff4757 0%,#ff6b7a 100%);color:white;padding:8px 16px;border-radius:20px;font-weight:bold;font-size:14px;box-shadow:0 4px 12px rgba(255,71,87,0.3);animation:pulse 2s infinite}
+.sale-banner{margin-top:12px;padding:8px 12px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);color:white;border-radius:8px;font-size:13px;font-weight:600;display:inline-block}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+</style>
+
+<div class="categories-container">
+  <h1 class="page-title">🏪 Browse All Categories</h1>
+  <p class="page-subtitle">Explore our wide range of products across {{ categories.count }} categories</p>
+  
+  <div class="categories-grid">
+    {% for category in categories %}
+    {% with discount_info=category.discount_badge %}
+    <a href="{% url 'shop:category_products' category.slug %}" class="category-link">
+      <div class="category-card {% if discount_info.active %}has-discount{% endif %}">
+        {% if discount_info.active %}
+          <div class="discount-badge">🔥 {{ discount_info.percentage }}% OFF</div>
+        {% endif %}
+        <div class="category-icon">{% if discount_info.active %}🎁{% else %}📦{% endif %}</div>
+        <div class="category-name">{{ category.name }}</div>
+        <div class="category-count">{{ category.products.count }} products</div>
+        {% if discount_info.active %}
+          <div class="sale-banner">✨ SPECIAL OFFER</div>
+        {% endif %}
+      </div>
+    </a>
+    {% endwith %}
+    {% empty %}
+    <div style="grid-column:1/-1;text-align:center;padding:60px;color:#999">
+      <h3>No categories found</h3>
+      <p>Please add categories from the admin panel</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

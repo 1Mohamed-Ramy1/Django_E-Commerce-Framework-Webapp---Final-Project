@@ -1,0 +1,14 @@
+<div class="bg-white rounded-xl shadow p-5 border border-gray-200">
+    <div class="flex justify-between items-center mb-3">
+        <h3 class="text-lg font-semibold">📦 Orders</h3>
+        <i class="fa-solid fa-box text-gray-500"></i>
+    </div>
+
+    <p class="text-3xl font-bold text-blue-600">{{ total_orders }}</p>
+    <p class="text-sm text-gray-500">Total Orders</p>
+    <p class="text-sm text-gray-500">Pending Orders: {{ pending_orders }}</p>
+
+    <a href="{% url 'shop:orders_list' %}" class="mt-4 inline-block px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
+        View Orders
+    </a>
+</div>

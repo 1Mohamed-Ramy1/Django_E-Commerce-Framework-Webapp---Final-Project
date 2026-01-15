@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Delete User{% endblock %}
+
+{% block content %}
+{% include "partials/header.html" %}
+
+<h2 style="margin-bottom:20px;">Confirm Delete User</h2>
+
+<p>Are you sure you want to delete user: <strong>{{ user.username }}</strong>?</p>
+
+<form method="post">
+    {% csrf_token %}
+    <button type="submit"
+        style="background:firebrick;color:white;padding:10px 15px;border:none;border-radius:5px;cursor:pointer;">
+        Yes, Delete
+    </button>
+    <a href="{% url 'dashboard:users_list' %}"
+       style="margin-left:10px;color:gray;text-decoration:none;">
+        Cancel
+    </a>
+</form>
+
+{% endblock %}

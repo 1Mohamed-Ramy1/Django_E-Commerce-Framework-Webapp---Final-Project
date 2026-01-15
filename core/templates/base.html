@@ -1,0 +1,145 @@
+{% load static %}
+
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="ELOSTORA - Premium E-Commerce Platform">
+    <title>{% block title %}ELOSTORA - Premium Shopping{% endblock %}</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{% static 'css/design-system.css' %}?v=1">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}?v=1">
+    
+    <style>
+        /* Global Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        html {
+            font-size: 16px;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+            color: #424242;
+            background: white;
+            line-height: 1.6;
+            padding-top: 70px;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding-top: 60px;
+            }
+        }
+        
+        main {
+            flex: 1;
+            width: 100%;
+            min-height: 60vh;
+        }
+
+        /* Link Reset */
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Button Reset */
+        button {
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        /* Scrollbar Styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f0f2f5;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #764ba2;
+        }
+
+        /* Firefox scrollbar */
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #667eea #f0f2f5;
+        }
+    </style>
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    {% include 'partials/navbar.html' %}
+
+    <!-- Main Content -->
+    <main role="main">
+        {% if messages %}
+        <div id="toast-container" aria-live="polite" aria-atomic="true" style="position:fixed; top:80px; left:50%; transform:translateX(-50%); z-index: 1100; display:flex; flex-direction:column; gap:10px; width:min(600px, 92vw);
+        padding:0 8px;">
+            {% for message in messages %}
+                {% with tag=message.tags %}
+                <div class="toast {{ tag }}" role="alert" style="display:flex; align-items:center; gap:10px; padding:12px 16px; border-radius:10px; box-shadow:0 10px 30px rgba(0,0,0,.10); border:1px solid #e6eaf5; background:#ffffff;">
+                    <span style="font-size:18px;">
+                        {% if 'success' in tag %}✅{% elif 'warning' in tag %}⚠️{% elif 'error' in tag %}❌{% else %}ℹ️{% endif %}
+                    </span>
+                    <div style="font-weight:600; color:#111827;">{{ message }}</div>
+                </div>
+                {% endwith %}
+            {% endfor %}
+        </div>
+        <script>
+            // Auto-hide toasts after 5 seconds
+            setTimeout(() => {
+                const c = document.getElementById('toast-container');
+                if (!c) return;
+                [...c.children].forEach(el => {
+                    el.style.transition = 'opacity .4s ease, transform .4s ease';
+                    el.style.opacity = '0';
+                    el.style.transform = 'translateY(-6px)';
+                    setTimeout(() => el.remove(), 450);
+                });
+            }, 5000);
+        </script>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    {% include 'partials/footer.html' %}
+
+    <!-- Scripts -->
+    <script>
+        // User Menu Toggle (Mobile)
+        document.addEventListener('DOMContentLoaded', function() {
+            const userBtn = document.querySelector('.user-btn');
+            if(userBtn) {
+                userBtn.addEventListener('click', function() {
+                    const isExpanded = this.getAttribute('aria-expanded') === 'true';
+                    this.setAttribute('aria-expanded', !isExpanded);
+                });
+            }
+        });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

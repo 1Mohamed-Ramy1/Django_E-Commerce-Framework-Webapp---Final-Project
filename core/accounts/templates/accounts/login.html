@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% load static %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Login | ELOSTORA</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      min-height:100vh;
+      font-family:'Plus Jakarta Sans',sans-serif;
+      background:
+        radial-gradient(circle at 10% 20%, rgba(255,140,0,0.25), transparent 40%),
+        radial-gradient(circle at 90% 80%, rgba(0,200,255,0.25), transparent 40%),
+        linear-gradient(135deg,#020617,#0f172a,#020617);
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      overflow:hidden;
+      color:#fff;
+      position:relative;
+    }
+
+    /* floating store icons */
+    .bg-shape{
+      position:absolute;
+      opacity:0.08;
+      animation: float 14s ease-in-out infinite;
+    }
+    .bg1{top:10%;left:5%;font-size:140px;animation-delay:0s}
+    .bg2{bottom:15%;left:10%;font-size:110px;animation-delay:3s}
+    .bg3{top:20%;right:8%;font-size:160px;animation-delay:6s}
+    .bg4{bottom:10%;right:15%;font-size:120px;animation-delay:9s}
+
+    @keyframes float{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-30px)}
+    }
+
+    .auth-shell{
+      width:min(1100px,95vw);
+      background:rgba(255,255,255,0.06);
+      border-radius:24px;
+      border:1px solid rgba(255,255,255,0.12);
+      backdrop-filter:blur(20px);
+      box-shadow:0 30px 90px rgba(0,0,0,0.6);
+      display:grid;
+      grid-template-columns:1.2fr 1fr;
+      overflow:hidden;
+      z-index:2;
+    }
+
+    .hero{
+      padding:60px;
+      background:
+        linear-gradient(160deg, rgba(255,140,0,0.35), rgba(0,200,255,0.25)),
+        url('https://images.unsplash.com/photo-1607082349566-1870e9f0f6b1?auto=format&fit=crop&w=1200&q=80') center/cover;
+      position:relative;
+    }
+    .hero::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:rgba(2,6,23,0.6);
+    }
+    .hero-content{
+      position:relative;
+      z-index:2;
+    }
+
+    .badge{
+      display:inline-flex;
+      align-items:center;
+      gap:10px;
+      padding:10px 18px;
+      border-radius:999px;
+      background:linear-gradient(135deg,#ff8c00,#00c8ff);
+      color:#020617;
+      font-weight:800;
+      margin-bottom:22px;
+      box-shadow:0 10px 30px rgba(255,140,0,0.5);
+    }
+
+    .hero h1{
+      font-size:42px;
+      line-height:1.1;
+      margin-bottom:14px;
+      font-weight:800;
+      letter-spacing:-1px;
+    }
+    .hero p{
+      max-width:380px;
+      color:#e5e7eb;
+      line-height:1.6;
+      font-size:15px;
+    }
+
+    .form-pane{
+      padding:60px 50px;
+      background:rgba(255,255,255,0.95);
+      color:#020617;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .form-pane h2{
+      font-size:30px;
+      font-weight:800;
+      margin-bottom:6px;
+    }
+    .form-pane .subtitle{
+      color:#64748b;
+      margin-bottom:28px;
+      font-size:14px;
+    }
+
+    .messages{margin-bottom:16px}
+    .msg{
+      padding:12px 14px;
+      border-radius:12px;
+      font-size:14px;
+      margin-bottom:8px;
+    }
+    .msg.error{background:#fef2f2;color:#b91c1c;border:1px solid #fecaca}
+    .msg.success{background:#ecfdf3;color:#15803d;border:1px solid #bbf7d0}
+
+    .field{margin-bottom:18px}
+    .field label{
+      display:block;
+      font-weight:700;
+      margin-bottom:6px;
+      font-size:14px;
+    }
+    .field input{
+      width:100%;
+      padding:14px 16px;
+      border-radius:14px;
+      border:1px solid #e5e7eb;
+      background:#f8fafc;
+      font-size:15px;
+      transition:.25s;
+    }
+    .field input:focus{
+      outline:none;
+      border-color:#ff8c00;
+      box-shadow:0 0 0 3px rgba(255,140,0,0.25);
+      background:#fff;
+    }
+
+    .btn{
+      margin-top:10px;
+      width:100%;
+      padding:14px;
+      border-radius:16px;
+      border:none;
+      background:linear-gradient(135deg,#ff8c00,#00c8ff);
+      color:#020617;
+      font-weight:800;
+      font-size:16px;
+      cursor:pointer;
+      box-shadow:0 15px 40px rgba(255,140,0,0.45);
+      transition:.25s;
+    }
+    .btn:hover{
+      transform:translateY(-2px) scale(1.01);
+      box-shadow:0 22px 55px rgba(255,140,0,0.6);
+    }
+
+    .links{
+      margin-top:18px;
+      display:flex;
+      flex-direction:column;
+      gap:6px;
+      font-size:14px;
+    }
+    .links a{
+      color:#ff8c00;
+      font-weight:700;
+      text-decoration:none;
+    }
+    .links a:hover{text-decoration:underline}
+
+    @media(max-width:900px){
+      .auth-shell{grid-template-columns:1fr}
+      .hero{display:none}
+      .form-pane{padding:40px 28px}
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Floating store icons -->
+  <div class="bg-shape bg1">🛒</div>
+  <div class="bg-shape bg2">🎁</div>
+  <div class="bg-shape bg3">👟</div>
+  <div class="bg-shape bg4">👜</div>
+
+  <div class="auth-shell">
+    <div class="hero">
+      <div class="hero-content">
+        <div class="badge">ELOSTORA STORE</div>
+        <h1>Everything you love.<br>One powerful store.</h1>
+        <p>
+          Shop the latest products, track your orders, earn points and enjoy a premium shopping experience built just for you.
+        </p>
+      </div>
+    </div>
+
+    <div class="form-pane">
+      <h2>Sign in</h2>
+      <p class="subtitle">Access your account and continue shopping</p>
+
+      {% if messages %}
+        {% for message in messages %}
+          {% if 'login' in message.tags or 'error' in message.tags %}
+            <div class="msg error">{{ message }}</div>
+          {% endif %}
+        {% endfor %}
+      {% endif %}
+
+
+      <form method="POST">
+        {% csrf_token %}
+
+        <div class="field">
+          <label>Username</label>
+          <input type="text" name="username" required placeholder="Enter your username">
+        </div>
+
+        <div class="field">
+          <label>Password</label>
+          <input type="password" name="password" required placeholder="Enter your password">
+        </div>
+
+        <button type="submit" class="btn">Login to Store</button>
+      </form>
+
+      <div class="links">
+        <a href="{% url 'accounts:forgot-password' %}">Forgot password?</a>
+        <span>New here? <a href="{% url 'accounts:register' %}">Create an account</a></span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>

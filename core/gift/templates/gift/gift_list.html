@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Premium Gifts - Redeem Your Points | ELOSTORA{% endblock %}
+
+{% block content %}
+<div class="gifts-page">
+    <!-- Hero Section -->
+    <section class="gifts-hero">
+        <div class="hero-content">
+            <h1 class="hero-title">🎁 Premium Gift Rewards</h1>
+            <p class="hero-subtitle">Redeem your points for exclusive gifts</p>
+            {% if request.user.is_authenticated %}
+            <div class="points-badge">
+                <span class="points-icon">💎</span>
+                <span class="points-text">Your Points: <strong>{{ user_points|default:0|floatformat:0 }}</strong></span>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Gifts Grid -->
+    <section class="gifts-section">
+        <div class="container">
+            {% if gifts %}
+            <div class="gifts-grid">
+                {% for gift in gifts %}
+                <div class="gift-card {% if request.user.is_authenticated and user_points < gift.points_cost %}gift-locked{% endif %}">
+                    <!-- Gift Image -->
+                    <div class="gift-image">
+                        {% if gift.image %}
+                        <img src="{{ gift.image.url }}" alt="{{ gift.name }}">
+                        {% else %}
+                        <div class="gift-placeholder">
+                            <span class="placeholder-icon">🎁</span>
+                        </div>
+                        {% endif %}
+                        
+                        <!-- Stock Badge -->
+                        {% if gift.stock_quantity < 10 %}
+                        <div class="stock-badge low-stock">Only {{ gift.stock_quantity }} left!</div>
+                        {% elif gift.stock_quantity < 1 %}
+                        <div class="stock-badge out-stock">Out of Stock</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Gift Info -->
+                    <div class="gift-content">
+                        <h3 class="gift-name">{{ gift.name }}</h3>
+                        <p class="gift-description">{{ gift.description|truncatewords:20 }}</p>
+                        
+                        <!-- Points Cost -->
+                        <div class="gift-footer">
+                            <div class="points-cost">
+                                <span class="cost-label">Cost:</span>
+                                <span class="cost-value">{{ gift.points_cost|floatformat:0 }} points</span>
+                            </div>
+                            
+                            {% if request.user.is_authenticated %}
+                                {% if user_points >= gift.points_cost and gift.stock_quantity > 0 %}
+                                <form method="POST" action="{% url 'gift:redeem_gift' gift.uid %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-redeem">Redeem Now</button>
+                                </form>
+                                {% elif gift.stock_quantity < 1 %}
+                                <button class="btn-redeem disabled" disabled>Out of Stock</button>
+                                {% else %}
+                                <button class="btn-redeem disabled" disabled>Need {{ gift.points_cost|add:user_points|add:"-"|add:user_points|floatformat:0 }} more</button>
+                                {% endif %}
+                            {% else %}
+                            <a href="{% url 'accounts:login' %}" class="btn-redeem">Login to Redeem</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">🎁</div>
+                <h3>No Gifts Available</h3>
+                <p>Check back soon for exciting rewards!</p>
+            </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Recent Redemptions -->
+    {% if user_redemptions %}
+    <section class="redemptions-section">
+        <div class="container">
+            <h2 class="section-title">Your Recent Redemptions</h2>
+            <div class="redemptions-list">
+                {% for redemption in user_redemptions %}
+                <div class="redemption-item">
+                    <div class="redemption-icon">✓</div>
+                    <div class="redemption-info">
+                        <h4>{{ redemption.gift.name }}</h4>
+                        <p>{{ redemption.points_spent|floatformat:0 }} points • {{ redemption.redeemed_at|date:"M d, Y" }}</p>
+                    </div>
+                    <div class="redemption-status" style="background:#dcfce7; color:#166534;">Completed</div>
+                </div>
+                {% endfor %}
+            </div>
+            <!-- Removed "View All Redemptions →" button per request -->
+        </div>
+    </section>
+    {% endif %}
+</div>
+
+<style>
+.gifts-page { background: #f9fafb; min-height: 100vh; }
+.gifts-hero { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 60px 20px; text-align: center; }
+.hero-content { max-width: 800px; margin: 0 auto; }
+.hero-title { font-size: clamp(32px, 5vw, 48px); font-weight: 700; margin: 0 0 12px; }
+.hero-subtitle { font-size: 18px; opacity: 0.95; margin: 0 0 24px; }
+.points-badge { display: inline-flex; align-items: center; gap: 12px; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); padding: 16px 32px; border-radius: 50px; font-size: 20px; }
+.points-icon { font-size: 28px; }
+
+.gifts-section { padding: 60px 20px; }
+.container { max-width: 1400px; margin: 0 auto; }
+.gifts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 24px; }
+
+.gift-card { background: white; border-radius: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s; border: 1px solid #f0f0f0; }
+.gift-card:hover { transform: translateY(-8px); box-shadow: 0 12px 32px rgba(102,126,234,0.15); }
+.gift-card.gift-locked { opacity: 0.7; }
+
+.gift-image { position: relative; width: 100%; height: 220px; background: #f5f5f5; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.gift-image img { width: 100%; height: 100%; object-fit: cover; }
+.gift-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; }
+.placeholder-icon { font-size: 64px; opacity: 0.3; }
+
+.stock-badge { position: absolute; top: 12px; right: 12px; padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.low-stock { background: #f59e0b; color: white; }
+.out-stock { background: #ef4444; color: white; }
+
+.gift-content { padding: 20px; }
+.gift-name { margin: 0 0 8px; font-size: 20px; font-weight: 700; color: #1a1a2e; }
+.gift-description { margin: 0 0 16px; font-size: 14px; color: #666; line-height: 1.5; }
+
+.gift-footer { display: flex; flex-direction: column; gap: 12px; }
+.points-cost { background: #f9fafb; border: 1px solid #eef2f7; border-radius: 8px; padding: 12px; text-align: center; }
+.cost-label { display: block; font-size: 12px; color: #667eea; font-weight: 700; text-transform: uppercase; margin-bottom: 4px; }
+.cost-value { display: block; font-size: 20px; color: #1a1a2e; font-weight: 700; }
+
+.btn-redeem { width: 100%; padding: 12px; background: #667eea; color: white; border: none; border-radius: 10px; font-weight: 700; cursor: pointer; transition: all 0.2s; text-decoration: none; display: inline-block; text-align: center; }
+.btn-redeem:hover { background: #764ba2; transform: scale(1.02); }
+.btn-redeem.disabled { background: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
+.btn-redeem.disabled:hover { transform: none; }
+
+.empty-state { text-align: center; padding: 80px 20px; }
+.empty-icon { font-size: 80px; margin-bottom: 16px; opacity: 0.5; }
+.empty-state h3 { font-size: 24px; color: #1a1a2e; margin: 0 0 8px; }
+.empty-state p { color: #666; }
+
+.redemptions-section { padding: 40px 20px; background: white; border-top: 1px solid #f0f0f0; }
+.section-title { font-size: 24px; font-weight: 700; color: #1a1a2e; margin: 0 0 24px; }
+.redemptions-list { display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px; }
+.redemption-item { display: flex; align-items: center; gap: 16px; padding: 16px; background: #f9fafb; border: 1px solid #eef2f7; border-radius: 12px; }
+.redemption-icon { width: 40px; height: 40px; background: #10b981; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; }
+.redemption-info { flex: 1; }
+.redemption-info h4 { margin: 0 0 4px; font-size: 16px; color: #1a1a2e; }
+.redemption-info p { margin: 0; font-size: 13px; color: #666; }
+.redemption-status { padding: 6px 12px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.status-pending, .status-processing, .status-shipped, .status-delivered { display:none; }
+
+.btn-view-all { display: inline-block; padding: 12px 24px; background: white; color: #667eea; border: 2px solid #667eea; border-radius: 10px; text-decoration: none; font-weight: 700; transition: all 0.2s; }
+.btn-view-all:hover { background: #f0f4ff; }
+
+@media (max-width: 768px) {
+    .gifts-grid { grid-template-columns: 1fr; }
+    .hero-title { font-size: 28px; }
+    .points-badge { font-size: 16px; padding: 12px 24px; }
+}
+</style>
+{% endblock %}

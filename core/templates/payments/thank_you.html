@@ -1,0 +1,242 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+.thank-you-container {
+    max-width: 800px;
+    margin: 50px auto;
+    padding: 40px;
+    text-align: center;
+}
+.success-animation {
+    margin-bottom: 30px;
+}
+.checkmark {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: block;
+    margin: 0 auto 20px;
+    background: #28a745;
+    animation: scale .3s ease-in-out .9s both;
+}
+.checkmark-circle {
+    stroke-dasharray: 166;
+    stroke-dashoffset: 166;
+    stroke-width: 3;
+    stroke-miterlimit: 10;
+    stroke: #28a745;
+    fill: none;
+    animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+.checkmark-check {
+    transform-origin: 50% 50%;
+    stroke-dasharray: 48;
+    stroke-dashoffset: 48;
+    stroke: #fff;
+    stroke-width: 5;
+    stroke-linecap: round;
+    animation: stroke 0.3s cubic-bezier(0.65, 0, 0.45, 1) 0.8s forwards;
+}
+@keyframes stroke {
+    100% { stroke-dashoffset: 0; }
+}
+@keyframes scale {
+    0%, 100% { transform: none; }
+    50% { transform: scale3d(1.1, 1.1, 1); }
+}
+.thank-you-title {
+    font-size: 48px;
+    font-weight: bold;
+    color: #28a745;
+    margin-bottom: 20px;
+    animation: fadeInUp 0.8s ease-out;
+}
+.thank-you-message {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 30px;
+    animation: fadeInUp 0.8s ease-out 0.2s both;
+}
+.points-card {
+    background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
+    border-radius: 15px;
+    padding: 30px;
+    margin: 30px 0;
+    box-shadow: 0 8px 20px rgba(255, 215, 0, 0.3);
+    animation: fadeInUp 0.8s ease-out 0.4s both;
+}
+.points-earned {
+    font-size: 64px;
+    font-weight: bold;
+    color: #d4af37;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+}
+.points-text {
+    font-size: 20px;
+    color: #333;
+    margin-top: 10px;
+}
+.order-info {
+    background: #f8f9fa;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 30px 0;
+    animation: fadeInUp 0.8s ease-out 0.6s both;
+}
+.info-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+.info-row:last-child {
+    border-bottom: none;
+}
+.action-buttons {
+    display: flex;
+    gap: 20px;
+    justify-content: center;
+    margin-top: 40px;
+    animation: fadeInUp 0.8s ease-out 0.8s both;
+}
+.btn-action {
+    padding: 15px 40px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: all 0.3s;
+    font-weight: bold;
+}
+.btn-shop {
+    background: #007bff;
+    color: white;
+}
+.btn-shop:hover {
+    background: #0056b3;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,123,255,0.4);
+}
+.btn-profile {
+    background: #6c757d;
+    color: white;
+}
+.btn-profile:hover {
+    background: #545b62;
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(108,117,125,0.4);
+}
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: #f0f;
+    position: absolute;
+    animation: confetti-fall 3s linear;
+}
+@keyframes confetti-fall {
+    to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+    }
+}
+</style>
+
+<div class="thank-you-container">
+    <!-- Success Checkmark Animation -->
+    <div class="success-animation">
+        <svg class="checkmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 52">
+            <circle class="checkmark-circle" cx="26" cy="26" r="25" fill="none"/>
+            <path class="checkmark-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+        </svg>
+    </div>
+
+    <!-- Thank You Title -->
+    <h1 class="thank-you-title">🎉 Thank You!</h1>
+    <p class="thank-you-message">
+        Your payment has been successfully processed!<br>
+        <strong>You made our day! ✨</strong>
+    </p>
+
+    <!-- Points Earned Card -->
+    <div class="points-card">
+        <div class="points-earned">+{{ points_earned }} 💎</div>
+        <div class="points-text">
+            <strong>Loyalty Points Earned!</strong><br>
+            Your total points: {{ total_points }} points<br>
+            <small>Collect more points to get amazing free gifts! 🎁</small>
+        </div>
+    </div>
+
+    <!-- Order Information -->
+    <div class="order-info">
+        <h3 style="margin-bottom: 20px; color: #333;">📦 Order Details</h3>
+        <div class="info-row">
+            <span><strong>Order Number:</strong></span>
+            <span>#{{ order.id }}</span>
+        </div>
+        <div class="info-row">
+            <span><strong>Order Total:</strong></span>
+            <span>${{ order.final_total }}</span>
+        </div>
+        <div class="info-row">
+            <span><strong>Payment Method:</strong></span>
+            <span>{{ order.payment.method|upper }}</span>
+        </div>
+        <div class="info-row">
+            <span><strong>Status:</strong></span>
+            <span style="color: #28a745; font-weight: bold;">✓ COMPLETED</span>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+        <a href="{% url 'payments:invoice_pdf' order.id %}" class="btn-action btn-shop">
+            📄 Download Receipt
+        </a>
+        <a href="{% url 'shop:shop_home' %}" class="btn-action btn-shop">
+            🛍️ Continue Shopping
+        </a>
+        <a href="{% url 'accounts:home' %}" class="btn-action btn-profile">
+            👤 View Profile
+        </a>
+    </div>
+
+    <p style="margin-top: 40px; color: #666; font-size: 16px;">
+        We hope to see you again soon! 😊
+    </p>
+</div>
+
+<script>
+// Create confetti effect
+function createConfetti() {
+    const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+    for(let i = 0; i < 50; i++) {
+        setTimeout(() => {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + '%';
+            confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDelay = Math.random() * 2 + 's';
+            document.body.appendChild(confetti);
+            setTimeout(() => confetti.remove(), 3000);
+        }, i * 50);
+    }
+}
+
+// Trigger confetti on page load
+window.addEventListener('load', createConfetti);
+</script>
+{% endblock %}

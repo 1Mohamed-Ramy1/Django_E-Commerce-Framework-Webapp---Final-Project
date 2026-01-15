@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}🛡️ Admin Panel{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'dashboard/admin.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    document.body.classList.add('admin-body');
+  });
+</script>
+{% endblock %}
+
+{% block content %}
+{% include "partials/header.html" %}
+<div class="admin-shell">
+  <div class="admin-header">
+    <div>
+      <div class="admin-title">🛡️ Admin Panel</div>
+      <div class="admin-subtitle">Quick overview of your store KPIs</div>
+    </div>
+  </div>
+
+  <div class="admin-grid">
+    <div class="admin-card">
+      <h3>Users</h3>
+      <div class="metric">{{ users_count }}</div>
+      <a href="{% url 'dashboard:users_list' %}">Manage Users →</a>
+    </div>
+    <div class="admin-card">
+      <h3>Products</h3>
+      <div class="metric">{{ products_count }}</div>
+      <a href="{% url 'dashboard:product_list' %}">Manage Products →</a>
+    </div>
+    <div class="admin-card">
+      <h3>Events</h3>
+      <div class="metric">{{ events_count }}</div>
+      <a href="{% url 'dashboard:event_list' %}">Manage Events →</a>
+    </div>
+    <div class="admin-card">
+      <h3>Weather</h3>
+      <div class="metric">{{ weather_count }}</div>
+      <a href="{% url 'dashboard:weather_list' %}">Manage Weather →</a>
+    </div>
+    <div class="admin-card">
+      <h3>Blog Posts</h3>
+      <div class="metric">{{ blog_count }}</div>
+      <a href="{% url 'dashboard:blog_list' %}">View Blog →</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

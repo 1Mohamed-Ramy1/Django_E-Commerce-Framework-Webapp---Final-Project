@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Add User{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'dashboard/admin.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded',()=>{
+       document.body.classList.add('admin-body');
+       const pw = document.getElementById('password-input');
+       const cb = document.getElementById('show-password');
+       if(pw && cb){
+              cb.addEventListener('change', ()=>{
+                     pw.type = cb.checked ? 'text' : 'password';
+              });
+       }
+});
+</script>
+{% endblock %}
+
+{% block content %}
+{% include "partials/header.html" %}
+<div class="admin-shell">
+       <div class="admin-header">
+              <div>
+                     <div class="admin-title">Add New User</div>
+                     <div class="admin-subtitle">Create an account with credentials and role</div>
+              </div>
+       </div>
+
+       <form method="POST" class="form-card">
+              {% csrf_token %}
+
+              <div class="form-group">
+                     <label>Username</label>
+                     <input class="form-control" type="text" name="username" required>
+              </div>
+
+              <div class="form-group">
+                     <label>Email</label>
+                     <input class="form-control" type="email" name="email" required>
+              </div>
+
+              <div class="form-group">
+                     <label>Password</label>
+                                                                       <div style="display:flex; gap:10px; align-items:center;">
+                                                                              <input id="password-input" class="form-control" type="password" name="password" required>
+                                                                              <label style="display:flex; align-items:center; gap:6px; font-size:14px; color:#333;">
+                                                                                     <input id="show-password" type="checkbox" aria-label="Show password"> Show
+                                                                              </label>
+                                                                       </div>
+              </div>
+
+              <div class="admin-actions">
+                     <button type="submit" class="btn btn-primary">Create User</button>
+                     <a class="btn btn-ghost" href="{% url 'dashboard:users_list' %}">Cancel</a>
+              </div>
+       </form>
+</div>
+
+{% endblock %}

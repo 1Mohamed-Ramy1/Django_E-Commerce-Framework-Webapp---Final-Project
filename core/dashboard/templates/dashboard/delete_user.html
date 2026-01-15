@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+{% include "partials/header.html" %}
+
+<h2 style="margin-top:20px; color:red;">Delete User</h2>
+<hr>
+
+<p>Are you sure you want to delete user <strong>{{ user.username }}</strong>?</p>
+
+<form method="POST" style="margin-top:15px;">
+  {% csrf_token %}
+  <button type="submit"
+          style="padding:10px 20px; background:red; color:white; border:none; cursor:pointer;">
+    Yes, Delete
+  </button>
+  <a href="{% url 'dashboard:users_list' %}"
+     style="padding:10px 20px; background:#ddd; color:black; text-decoration:none; margin-left:10px;">
+    Cancel
+  </a>
+</form>
+
+{% endblock %}

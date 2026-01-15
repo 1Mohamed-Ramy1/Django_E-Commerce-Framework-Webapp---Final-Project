@@ -1,0 +1,7 @@
+Django==6.0
+python-decouple
+django-crispy-forms
+crispy-bootstrap4
+reportlab
+requests
+Pillow

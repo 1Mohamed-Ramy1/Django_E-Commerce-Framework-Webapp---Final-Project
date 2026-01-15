@@ -1,0 +1,243 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+/* ========== GLOBAL ========== */
+body{
+    background:linear-gradient(135deg,#0f172a,#020617);
+}
+.checkout-wrapper{
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:40px 10px;
+}
+.checkout-card{
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(18px);
+    border-radius:24px;
+    border:1px solid rgba(255,255,255,0.15);
+    box-shadow:0 30px 80px rgba(0,0,0,.4);
+    overflow:hidden;
+    animation:fadeInUp .7s ease;
+}
+@keyframes fadeInUp{
+    from{opacity:0;transform:translateY(40px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+/* ========== HEADER ========== */
+.checkout-header{
+    padding:24px 28px;
+    background:linear-gradient(135deg,#22c55e,#16a34a);
+    color:#022c22;
+    font-size:28px;
+    font-weight:900;
+    display:flex;
+    align-items:center;
+    gap:10px;
+}
+
+/* ========== ORDER SUMMARY ========== */
+.os-card{
+    background:rgba(255,255,255,0.12);
+    border-radius:20px;
+    padding:20px;
+    border:1px solid rgba(255,255,255,0.2);
+}
+.os-header{
+    font-size:22px;
+    font-weight:900;
+    color:#ecfeff;
+    margin-bottom:12px;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+.os-list{list-style:none;padding:0;margin:0}
+.os-row{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:12px 14px;
+    margin-bottom:10px;
+    border-radius:14px;
+    background:rgba(255,255,255,0.08);
+    transition:.3s ease;
+}
+.os-row:hover{
+    background:rgba(34,197,94,0.15);
+    transform:translateX(4px);
+}
+.os-item-name{
+    color:#f8fafc;
+    font-weight:900;
+    font-size:16px;
+}
+.os-meta{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    margin-top:4px;
+}
+.badge{
+    padding:4px 10px;
+    border-radius:999px;
+    font-size:12px;
+    font-weight:800;
+}
+.badge.size{background:#06b6d4;color:#022c22}
+.badge.qty{background:#6366f1;color:#eef2ff}
+.unit{color:#cbd5f5;font-weight:700}
+.os-price{
+    color:#22c55e;
+    font-weight:900;
+    font-size:16px;
+}
+.os-sub,.os-total{
+    display:flex;
+    justify-content:space-between;
+    padding:10px 14px;
+    border-radius:12px;
+    margin-top:8px;
+}
+.os-sub{background:rgba(255,255,255,0.06);color:#e5e7eb;font-weight:700}
+.os-total{
+    background:linear-gradient(135deg,#22c55e,#4ade80);
+    color:#022c22;
+    font-size:18px;
+    font-weight:900;
+}
+.os-divider{
+    border:none;
+    border-top:1px dashed rgba(255,255,255,0.3);
+    margin:14px 0;
+}
+
+/* ========== FORM ========== */
+.form-section{
+    background:rgba(255,255,255,0.1);
+    padding:20px;
+    border-radius:20px;
+    margin-top:20px;
+    border:1px solid rgba(255,255,255,0.2);
+}
+.form-section h4{
+    color:#ecfeff;
+    font-weight:900;
+    margin-bottom:10px;
+}
+.form-control,.form-select{
+    background:rgba(255,255,255,0.15);
+    border:none;
+    color:#fff;
+    border-radius:14px;
+    padding:12px 14px;
+}
+.form-control::placeholder{color:#cbd5e1}
+.form-control:focus,.form-select:focus{
+    background:rgba(255,255,255,0.2);
+    color:#fff;
+    box-shadow:0 0 0 2px #22c55e;
+}
+
+/* ========== BUTTON ========== */
+.confirm-btn{
+    margin-top:24px;
+    width:100%;
+    padding:14px;
+    font-size:18px;
+    font-weight:900;
+    border-radius:999px;
+    border:none;
+    background:linear-gradient(135deg,#22c55e,#4ade80);
+    color:#022c22;
+    transition:.3s ease;
+}
+.confirm-btn:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 25px rgba(34,197,94,.6);
+}
+</style>
+
+<div class="checkout-wrapper">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-9 col-xl-8">
+                <div class="checkout-card">
+
+                    <!-- HEADER -->
+                    <div class="checkout-header">
+                        🛒 Secure Checkout
+                    </div>
+
+                    <div class="p-4">
+
+                        <!-- ORDER SUMMARY -->
+                        <div class="os-card mb-4">
+                            <div class="os-header">📦 Order Summary</div>
+
+                            <ul class="os-list">
+                                {% for item in cart_items %}
+                                <li class="os-row">
+                                    <div class="os-name">
+                                        {{ item.product.name }}{% if item.size %} ({{ item.size }}){% endif %}
+                                        <span class="os-qty">×{{ item.quantity }}</span>
+                                    </div>
+                                    <div class="os-price">$ {{ item.subtotal|default:"0"|floatformat:2 }}</div>
+                                </li>
+                                {% empty %}
+                                <li class="os-row">
+                                    <div class="os-item-name">No items in cart</div>
+                                    <div class="os-price">$0.00</div>
+                                </li>
+                                {% endfor %}
+                            </ul>
+
+                            <div class="os-row os-sub">
+                                <div>Subtotal:</div>
+                                <div class="os-price">$ {{ subtotal|default:"0"|floatformat:2 }}</div>
+                            </div>
+                            <div class="os-row os-sub">
+                                <div>Shipping (5%):</div>
+                                <div class="os-price">$ {{ delivery_fee|default:"0"|floatformat:2 }}</div>
+                            </div>
+                            <div style="margin-top:6px;">
+                                <small style="color:#cbd5f5;">Shipping is calculated as 5% of the subtotal and added to the total.</small>
+                            </div>
+                            <hr class="os-divider">
+                            <div class="os-row os-total">
+                                <div>Total:</div>
+                                <div class="os-price">$ {{ final_total|default:"0"|floatformat:2 }}</div>
+                            </div>
+                        </div>
+
+                        <!-- FORM -->
+                        <form method="POST">
+                            {% csrf_token %}
+
+                            <div class="form-section">
+                                <h4>📍 Delivery Address</h4>
+                                <textarea name="address" class="form-control" rows="3" required placeholder="Enter your full delivery address"></textarea>
+                            </div>
+
+                            <div class="form-section">
+                                <h4>💳 Payment Method</h4>
+                                <select name="payment_method" class="form-select" required>
+                                    <option value="cash">💵 Cash on Delivery</option>
+                                    <option value="visa">💳 Visa / Credit Card</option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="confirm-btn">
+                                ✅ Confirm Order Now
+                            </button>
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

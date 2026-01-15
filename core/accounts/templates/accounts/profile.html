@@ -1,0 +1,158 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+
+<div class="ultra-modern-profile">
+    <!-- Hero Section -->
+    <div class="profile-hero">
+        <div class="hero-gradient"></div>
+        <div class="profile-card-modern">
+            <div class="profile-avatar-wrapper">
+                {% if request.user.profile.image %}
+                    <img src="{{ request.user.profile.image.url }}" class="profile-avatar">
+                {% else %}
+                    <div class="avatar-placeholder">{{ request.user.username|first|upper }}</div>
+                {% endif %}
+                <div class="status-badge">Active</div>
+            </div>
+            <h1 class="profile-name">{{ request.user.get_full_name|default:request.user.username }}</h1>
+            <p class="profile-email">{{ request.user.email }}</p>
+            <div class="loyalty-badge">
+                <span class="points-icon">⭐</span>
+                <span class="points-value">{{ request.user.profile.points|default:0 }}</span>
+                <span class="points-label">Reward Points</span>
+            </div>
+            <a href="{% url 'gift:gift_list' %}" class="btn-redeem-gifts" style="margin-top: 12px; display: inline-block; padding: 10px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border-radius: 10px; text-decoration: none; font-weight: 600;">
+                🎁 Redeem Gifts
+            </a>
+            <a href="{% url 'accounts:edit-profile' %}" class="btn-edit-modern">
+                <span>✏️</span> Edit Profile
+            </a>
+        </div>
+    </div>
+
+    <!-- Info Grid -->
+    <div class="info-grid">
+        <div class="info-card">
+            <div class="card-icon">👤</div>
+            <h3>Personal Info</h3>
+            <div class="info-row">
+                <span class="label">First Name:</span>
+                <span class="value">{{ request.user.first_name|default:"Not set" }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Last Name:</span>
+                <span class="value">{{ request.user.last_name|default:"Not set" }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Username:</span>
+                <span class="value">{{ request.user.username }}</span>
+            </div>
+        </div>
+
+        <div class="info-card">
+            <div class="card-icon">📱</div>
+            <h3>Contact Details</h3>
+            <div class="info-row">
+                <span class="label">Phone:</span>
+                <span class="value">{{ profile.phone|default:"Not provided" }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Address:</span>
+                <span class="value">{{ profile.address|default:"Not provided" }}</span>
+            </div>
+            <div class="info-row">
+                <span class="label">Country:</span>
+                <span class="value">{{ profile.country|default:"Not provided" }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Gifts Section -->
+    <div class="orders-modern">
+        <div class="section-header">
+            <h2>🎁 My Gifts</h2>
+            <span class="orders-count">{{ gifts|length }} Redeemed</span>
+        </div>
+        {% if gifts %}
+        <div class="orders-list">
+            {% for r in gifts %}
+            <div class="order-card">
+                <div class="order-header">
+                    <div class="order-id">
+                        <span class="id-label">{{ r.gift.name }}</span>
+                        <span class="status-badge" style="background:#dcfce7;color:#166534;">Completed</span>
+                    </div>
+                    <div class="order-date">{{ r.redeemed_at|date:"M d, Y • h:i A" }}</div>
+                </div>
+                <div class="order-body">
+                    <div class="order-detail">
+                        <span class="detail-label">💎 Points Spent:</span>
+                        <span class="detail-value">{{ r.points_spent }}</span>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+            <div class="no-orders">
+                <div class="empty-icon">🎁</div>
+                <h3>No gifts yet</h3>
+                <p>Redeem gifts with your points.</p>
+                <a href="{% url 'gift:gift_list' %}" class="btn-shop">🎁 Browse Gifts</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- Orders Section -->
+    <div class="orders-modern" style="margin-top:30px;">
+        <div class="section-header">
+            <h2>🛍️ Order History</h2>
+            <span class="orders-count">{{ orders.count }} Order{{ orders.count|pluralize }}</span>
+        </div>
+        
+        {% if orders %}
+            <div class="orders-list">
+                {% for order in orders %}
+                <div class="order-card">
+                    <div class="order-header">
+                        <div class="order-id">
+                            <span class="id-label">#{{ order.id }}</span>
+                            <span class="status-badge status-{{ order.status }}">{{ order.get_status_display }}</span>
+                        </div>
+                        <div class="order-date">{{ order.created_at|date:"M d, Y • h:i A" }}</div>
+                    </div>
+                    <div class="order-body">
+                        <div class="order-detail">
+                            <span class="detail-label">💳 Payment:</span>
+                            <span class="detail-value">{{ order.payment.get_method_display }}</span>
+                        </div>
+                        <div class="order-detail">
+                            <span class="detail-label">📦 Items:</span>
+                            <span class="detail-value">{{ order.items.count }} item{{ order.items.count|pluralize }}</span>
+                        </div>
+                        <div class="order-detail">
+                            <span class="detail-label">🚚 Delivery:</span>
+                            <span class="detail-value">${{ order.delivery_fee }}</span>
+                        </div>
+                        <div class="order-total">
+                            <span class="total-label">Total:</span>
+                            <span class="total-amount">${{ order.final_total }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-orders">
+                <div class="empty-icon">📦</div>
+                <h3>No orders yet</h3>
+                <p>Start shopping to see your orders here!</p>
+                <a href="{% url 'shop:shop_home' %}" class="btn-shop">🛒 Start Shopping</a>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

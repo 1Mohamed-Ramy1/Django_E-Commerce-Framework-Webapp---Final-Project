@@ -1,0 +1,13 @@
+<div class="bg-white rounded-xl shadow p-5 border border-gray-200">
+    <div class="flex justify-between items-center mb-3">
+        <h3 class="text-lg font-semibold">📝 Blog Products</h3>
+        <i class="fa-solid fa-blog text-gray-500"></i>
+    </div>
+
+    <p class="text-3xl font-bold text-purple-600">{{ blog_products|length }}</p>
+    <p class="text-sm text-gray-500">Total Products</p>
+
+    <a href="{% url 'blog:blog_list' %}" class="mt-4 inline-block px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-sm">
+        View All
+    </a>
+</div>
